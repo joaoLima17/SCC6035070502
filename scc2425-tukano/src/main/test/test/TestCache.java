@@ -1,11 +1,11 @@
-package test;
+package main.test.test;
 
 import java.util.Locale;
 
-import cache.RedisCache;
-import tukano.api.User;
-import tukano.api.UserDAO;
-import utils.JSON;
+import main.java.cache.RedisCache;
+import main.java.tukano.api.User;
+import main.java.tukano.api.UserDAO;
+import main.java.utils.JSON;
 
 /**
  * Standalone program for accessing the database

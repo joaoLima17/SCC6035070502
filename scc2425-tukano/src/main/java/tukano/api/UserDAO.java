@@ -1,4 +1,4 @@
-package tukano.api;
+package main.java.tukano.api;
 
 /**
  * Represents a User, as stored in the database

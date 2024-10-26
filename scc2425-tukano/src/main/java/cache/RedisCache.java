@@ -1,4 +1,4 @@
-package cache;
+package main.java.cache;
 
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;

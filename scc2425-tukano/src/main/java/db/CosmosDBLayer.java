@@ -1,4 +1,4 @@
-package db;
+package main.java.db;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -13,7 +13,7 @@ import com.azure.cosmos.models.CosmosItemRequestOptions;
 import com.azure.cosmos.models.CosmosQueryRequestOptions;
 import com.azure.cosmos.models.PartitionKey;
 
-import db.Result.ErrorCode;
+import main.java.db.Result.ErrorCode;
 
 
 public class CosmosDBLayer {

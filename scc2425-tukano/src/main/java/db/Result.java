@@ -1,4 +1,4 @@
-package db;
+package main.java.db;
 
 import java.util.function.Function;
 

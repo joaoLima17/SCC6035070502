@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module version="4">
   <component name="FacetManager">
+    <facet type="azure" name="Azure">
+      <configuration>
+        <option name="dotAzurePath" value="C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\.azure" />
+      </configuration>
+    </facet>
     <facet type="hibernate" name="Hibernate">
       <configuration>
         <datasource-map />
