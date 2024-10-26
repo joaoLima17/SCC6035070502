@@ -1,4 +1,4 @@
-package tukano.impl.rest.utils;
+package main.java.tukano.impl.rest.utils;
 
 import com.azure.core.util.BinaryData;
 import com.azure.storage.blob.BlobClient;

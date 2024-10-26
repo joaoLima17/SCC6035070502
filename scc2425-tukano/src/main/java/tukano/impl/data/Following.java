@@ -14,12 +14,14 @@ public class Following{
 	@Id 
 	String followee;
 
-	Following() {}
-
 	public Following(String follower, String followee) {
 		super();
 		this.follower = follower;
 		this.followee = followee;
+	}
+
+	public Following() {
+
 	}
 
 	public String getFollower() {
