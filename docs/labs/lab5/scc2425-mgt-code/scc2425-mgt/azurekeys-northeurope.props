@@ -1,0 +1,5 @@
+# Date : 16/10/24, 12:23
+BlobStoreConnection=DefaultEndpointsProtocol=https;AccountName=sto60350northeurope;AccountKey=SPBbW4QHvOmbkTzlWH/KIaiBTSOxJGcFtURjo05jY4HELKf+oGpe3HLSrd16vy2nVh6Uh2kGBzsO+AStFw/GQQ==;EndpointSuffix=core.windows.net
+COSMOSDB_KEY=EiN0JjNo7wuFPYRmOR7KgrjfguIihB5wf6pRw8c3rhHCGgBJ85pZdoMgk9gAm90z3m8iHAEx9mwiACDbTne68A==
+COSMOSDB_URL=https://cosmos60350.documents.azure.com:443/
+COSMOSDB_DATABASE=cosmosdb60350

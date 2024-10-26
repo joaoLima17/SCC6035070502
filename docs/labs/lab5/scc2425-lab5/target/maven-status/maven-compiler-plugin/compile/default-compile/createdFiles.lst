@@ -1,0 +1,7 @@
+scc\serverless\TimerFunction.class
+scc\serverless\CosmosDBFunction.class
+scc\utils\GSON.class
+scc\serverless\HttpFunction.class
+scc\data\User.class
+scc\serverless\BlobStoreFunction.class
+scc\serverless\CosmosDBFunction$1.class
