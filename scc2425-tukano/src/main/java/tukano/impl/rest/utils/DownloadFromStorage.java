@@ -16,7 +16,7 @@ public class DownloadFromStorage {
 		
 
 		// Get connection string in the storage access keys page
-		String storageConnectionString = "DefaultEndpointsProtocol=https;AccountName=tukano2425;AccountKey=W+ItR8zhwuliGXqntwaTDNfxI0MkEsSwPZVxaVpCfTC2SZo1RZQOmVoC9p95mebx6uz5Ja53Grcc+AStDriP4A==;EndpointSuffix=core.windows.net";
+		String storageConnectionString = "DefaultEndpointsProtocol=https;AccountName=scc60350;AccountKey=PFFsaRsGU1GopDIjf1LAaFESIhI3emOS7/NHsfsAf1+KKOTqwqrNqRpv3mjkCof8+GQWU3xt4o6k+AStgeXKjA==;EndpointSuffix=core.windows.net";
 
 		try {
 			// Get container client
