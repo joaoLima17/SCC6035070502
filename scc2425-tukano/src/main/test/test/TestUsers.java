@@ -1,10 +1,10 @@
-package main.test.test;
+package test;
 
 import java.util.Locale;
 
-import main.java.tukano.api.User;
-import main.java.tukano.api.UserDAO;
-import main.java.db.CosmosDBLayer;
+import tukano.api.User;
+import tukano.api.UserDAO;
+import db.CosmosDBLayer;
 
 /**
  * Standalone program for accessing the database

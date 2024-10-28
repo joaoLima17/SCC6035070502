@@ -1,4 +1,4 @@
-package main.java.db;
+package db;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -12,8 +12,8 @@ import com.azure.cosmos.CosmosException;
 import com.azure.cosmos.models.CosmosItemRequestOptions;
 import com.azure.cosmos.models.CosmosQueryRequestOptions;
 import com.azure.cosmos.models.PartitionKey;
-
-import main.java.db.Result.ErrorCode;
+import tukano.api.Result;
+import tukano.api.Result.ErrorCode;
 
 
 public class CosmosDBLayer {

@@ -1,4 +1,4 @@
-package main.test.tukano.clients.rest;
+package tukano.clients.rest;
 
 import com.azure.core.util.BinaryData;
 import com.azure.storage.blob.BlobClient;
@@ -6,16 +6,17 @@ import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobContainerClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.MediaType;
-import main.java.tukano.api.Blobs;
-import main.java.tukano.api.Result;
-import main.java.tukano.api.rest.RestBlobs;
-
+import tukano.api.Blobs;
+import tukano.api.Result;
+import tukano.api.rest.RestBlobs;
 import java.nio.file.Path;
+
 //nao testado
 public class RestBlobsClient extends RestClient implements Blobs {
 	String storageConnectionString = "DefaultEndpointsProtocol=https;AccountName=scc60350;AccountKey=PFFsaRsGU1GopDIjf1LAaFESIhI3emOS7/NHsfsAf1+KKOTqwqrNqRpv3mjkCof8+GQWU3xt4o6k+AStgeXKjA==;EndpointSuffix=core.windows.net";
 	private static final String BLOBS_CONTAINER_NAME = "images";
 	BlobContainerClient containerClient;
+	
 	public RestBlobsClient(String serverURI) {
 		super(serverURI, RestBlobs.PATH);
 		containerClient = new BlobContainerClientBuilder()
