@@ -5,6 +5,7 @@ package tukano.api;
  */
 public class UserDAO extends User {
 	private String _rid;
+	private String _ts;
 	public String get_rid() {
 		return _rid;
 	}
@@ -25,7 +26,7 @@ public class UserDAO extends User {
 	}
 
 
-	private String _ts;
+	
 
 	public UserDAO() {
 	}

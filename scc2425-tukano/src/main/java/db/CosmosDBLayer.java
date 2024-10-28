@@ -17,9 +17,9 @@ import tukano.api.Result.ErrorCode;
 
 
 public class CosmosDBLayer {
-	private static final String CONNECTION_URL = "https://tukano2425.documents.azure.com:443/"; // replace with your own
-	private static final String DB_KEY = "aTu5BOZOjrcHYkqcCurXKwLzfq2piPCtoxA86KJUKuoxBBiKsMEFV9MU4b2VZMGrUbMA9Nr5VXtHACDbySB2Sg==";
-	private static final String DB_NAME = "tukano2425";
+	private static final String CONNECTION_URL = "https://scc60350.documents.azure.com:443/"; // replace with your own
+	private static final String DB_KEY = "RaSUWAOvvbWuL4LVXHEQGjeLSrZig4rgXH9FZD1YxSGDGbW4oIGVvUymjJSjRiLFaoCZjQyXb0tHACDbTLQFlQ==";
+	private static final String DB_NAME = "scc2324";
 	private static final String CONTAINER = "users";
 	
 	private static CosmosDBLayer instance;
