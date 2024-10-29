@@ -80,7 +80,7 @@
 					<username>maven</username>
 					<password>s3cret</password>
 					<update>true</update>
-					<path>/scc2425-tukano</path>
+					<path></path>
 				</configuration>
 			</plugin>
 		</plugins>
