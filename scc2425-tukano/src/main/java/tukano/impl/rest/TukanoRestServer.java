@@ -3,17 +3,16 @@ package tukano.impl.rest;
 import java.net.URI;
 import java.util.logging.Logger;
 
-import jakarta.ws.rs.core.Application;
 import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
+import jakarta.ws.rs.core.Application;
 import tukano.impl.Token;
 import utils.Args;
 import utils.IP;
-import utils.Props;
 
 
-public class TukanoRestServer extends Application {
+public class TukanoRestServer extends Application{
 	final private static Logger Log = Logger.getLogger(TukanoRestServer.class.getName());
 
 	static final String INETADDR_ANY = "0.0.0.0";
@@ -29,7 +28,6 @@ public class TukanoRestServer extends Application {
 	
 	protected TukanoRestServer() {
 		serverURI = String.format(SERVER_BASE_URI, IP.hostname(), PORT);
-		Props.load("azurekeys-region.props");
 	}
 
 
@@ -38,7 +36,7 @@ public class TukanoRestServer extends Application {
 		ResourceConfig config = new ResourceConfig();
 		
 		config.register(RestBlobsResource.class);
-		config.register(RestUsersResource.class);
+		config.register(RestUsersResource.class); 
 		config.register(RestShortsResource.class);
 		
 		JdkHttpServerFactory.createHttpServer( URI.create(serverURI.replace(IP.hostname(), INETADDR_ANY)), config);

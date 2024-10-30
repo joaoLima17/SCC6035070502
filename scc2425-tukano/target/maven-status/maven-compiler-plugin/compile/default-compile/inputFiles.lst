@@ -6,8 +6,10 @@ C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\
 C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\Shorts.java
 C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\storage\FilesystemStorage.java
 C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\rest\RestUsers.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\data\LikesDAO.java
 C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\utils\Props.java
 C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\rest\RestUsersResource.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\storage\AzureStorage.java
 C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\utils\JSON.java
 C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\JavaUsers.java
 C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\test\test\Test.java
@@ -46,5 +48,6 @@ C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\
 C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\utils\Hex.java
 C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\test\tukano\clients\rest\RestClient.java
 C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\db\CosmosDBLayer.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\data\FollowingDAO.java
 C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\Token.java
 C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\utils\IP.java
