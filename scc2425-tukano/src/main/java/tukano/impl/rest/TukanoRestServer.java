@@ -1,6 +1,8 @@
 package tukano.impl.rest;
 
 import java.net.URI;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
@@ -20,18 +22,24 @@ public class TukanoRestServer extends Application{
 
 	public static final int PORT = 8080;
 
+	private Set<Object> singletons = new HashSet<>();
+	private Set<Class<?>> resources = new HashSet<>();
+
 	public static String serverURI;
 			
 	static {
 		System.setProperty("java.util.logging.SimpleFormatter.format", "%4$s: %5$s");
 	}
 	
-	protected TukanoRestServer() {
+	public TukanoRestServer() {
 		serverURI = String.format(SERVER_BASE_URI, IP.hostname(), PORT);
+		resources.add(RestBlobsResource.class);
+		resources.add(RestShortsResource.class);
+		resources.add(RestUsersResource.class);
 	}
 
 
-	protected void start() throws Exception {
+	/**public void start() throws Exception {
 	
 		ResourceConfig config = new ResourceConfig();
 		
@@ -42,15 +50,25 @@ public class TukanoRestServer extends Application{
 		JdkHttpServerFactory.createHttpServer( URI.create(serverURI.replace(IP.hostname(), INETADDR_ANY)), config);
 		
 		Log.info(String.format("Tukano Server ready @ %s\n",  serverURI));
+	}**/
+	
+	@Override
+	public Set<Class<?>> getClasses() {
+		return resources;
 	}
-	
-	
+
+	@Override
+	public Set<Object> getSingletons() {
+		return singletons;
+	}
+
 	public static void main(String[] args) throws Exception {
-		Args.use(args);
+		//Args.use(args);
 		
-		Token.setSecret( Args.valueOf("-secret", ""));
+		//Token.setSecret( Args.valueOf("-secret", ""));
 //		Props.load( Args.valueOf("-props", "").split(","));
 		
-		new TukanoRestServer().start();
+		//new TukanoRestServer().start();
+		return;
 	}
 }

@@ -12,7 +12,7 @@
     <display-name>SCC BackEnd</display-name>
  <servlet>
     <servlet-name>Resteasy</servlet-name>
-    <servlet-class>jakarta.ws.rs.core.Application</servlet-class>
+    <servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
      <init-param>
         <param-name>jakarta.ws.rs.Application</param-name>
         <param-value>tukano.impl.rest.TukanoRestServer</param-value>
