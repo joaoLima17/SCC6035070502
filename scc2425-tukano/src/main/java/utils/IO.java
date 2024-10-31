@@ -2,6 +2,8 @@ package utils;
 
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
@@ -45,6 +47,16 @@ final public class IO {
 			throw new RuntimeException(x);
 		}
 	}
+	 public static void readstream(ByteArrayOutputStream outputStream, int chunkSize, Consumer<byte[]> sink) {
+        try (var fis = new ByteArrayInputStream(outputStream.toByteArray())) {
+			int n;
+			var chunk = new byte[chunkSize];
+			while ((n = fis.read(chunk)) > 0)
+				sink.accept(Arrays.copyOf(chunk, n));
+		} catch (IOException x) {
+			throw new RuntimeException(x);
+		}
+    }
 	
 	public static boolean delete( File file) {
 		try {
@@ -106,4 +118,6 @@ final public class IO {
 			throw new RuntimeException( e );
 		}
 	}
+
+   
 }

@@ -8,7 +8,7 @@ import static tukano.api.Result.ErrorCode.CONFLICT;
 import static tukano.api.Result.ErrorCode.INTERNAL_ERROR;
 import static tukano.api.Result.ErrorCode.NOT_FOUND;
 
-
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 import java.util.Arrays;
@@ -85,8 +85,11 @@ public class AzureStorage implements BlobStorage {
 		var file = toFile( path );
 		if( ! file.exists() )
 			return error(NOT_FOUND);
+		BlobClient blob = containerClient.getBlobClient(path);
 		
-		IO.read( file, CHUNK_SIZE, sink );
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream(CHUNK_SIZE);
+		blob.downloadStream(outputStream);
+		IO.readstream( outputStream, CHUNK_SIZE, sink );
 		return ok();
 	}
 	
