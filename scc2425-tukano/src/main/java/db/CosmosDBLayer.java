@@ -1,7 +1,7 @@
 package db;
 
-import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import com.azure.cosmos.ConsistencyLevel;
 import com.azure.cosmos.CosmosClient;
@@ -76,10 +76,10 @@ public class CosmosDBLayer {
 		return tryCatch( () -> container.createItem(obj).getItem());
 	}
 	
-	public <T> Result<List<T>> query(Class<T> clazz, String queryStr) {
+	public <T> Result<Stream<T>> query(Class<T> clazz, String queryStr) {
 		return tryCatch(() -> {
 			var res = container.queryItems(queryStr, new CosmosQueryRequestOptions(), clazz);
-			return res.stream().toList();
+			return res.stream();
 		});
 	}
 	

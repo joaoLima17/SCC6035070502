@@ -8,7 +8,7 @@ import static tukano.api.Result.errorOrVoid;
 import static tukano.api.Result.ok;
 import static tukano.api.Result.ErrorCode.BAD_REQUEST;
 import static tukano.api.Result.ErrorCode.FORBIDDEN;
-import static utils.DB.getOne;
+import static utils.CosmosDB.getOne;
 
 import java.util.List;
 import java.util.UUID;
@@ -22,7 +22,7 @@ import tukano.api.User;
 import tukano.impl.data.Following;
 import tukano.impl.data.Likes;
 import tukano.impl.rest.TukanoRestServer;
-import utils.DB;
+import utils.CosmosDB;
 
 public class JavaShorts implements Shorts {
 
@@ -49,7 +49,7 @@ public class JavaShorts implements Shorts {
 			var blobUrl = format("%s/%s/%s", TukanoRestServer.serverURI, Blobs.NAME, shortId); 
 			var shrt = new Short(shortId, userId, blobUrl);
 
-			return errorOrValue(DB.insertOne(shrt), s -> s.copyWithLikes_And_Token(0));
+			return errorOrValue(CosmosDB.insertOne(shrt), s -> s.copyWithLikes_And_Token(0));
 		});
 	}
 
@@ -61,8 +61,8 @@ public class JavaShorts implements Shorts {
 			return error(BAD_REQUEST);
 
 		var query = format("SELECT count(*) FROM Likes l WHERE l.shortId = '%s'", shortId);
-		var likes = DB.sql(query, Long.class);
-		return errorOrValue( getOne(shortId, Short.class), shrt -> shrt.copyWithLikes_And_Token( likes.get(0)));
+		var likes = CosmosDB.query(query, Long.class).value().toList();
+		return errorOrValue(getOne(shortId, Short.class), shrt -> shrt.copyWithLikes_And_Token( likes.get(0)));
 	}
 
 	
@@ -73,6 +73,7 @@ public class JavaShorts implements Shorts {
 		return errorOrResult( getShort(shortId), shrt -> {
 			
 			return errorOrResult( okUser( shrt.getOwnerId(), password), user -> {
+				/*
 				return DB.transaction( hibernate -> {
 
 					hibernate.remove( shrt);
@@ -82,6 +83,9 @@ public class JavaShorts implements Shorts {
 					
 					JavaBlobs.getInstance().delete(shrt.getBlobUrl(), Token.get() );
 				});
+				*/
+				CosmosDB.deleteOne(shrt);
+				JavaBlobs.getInstance().delete(shrt.getBlobUrl(), Token.get());
 			});	
 		});
 	}
@@ -91,7 +95,7 @@ public class JavaShorts implements Shorts {
 		Log.info(() -> format("getShorts : userId = %s\n", userId));
 
 		var query = format("SELECT s.shortId FROM Short s WHERE s.ownerId = '%s'", userId);
-		return errorOrValue( okUser(userId), DB.sql( query, String.class));
+		return errorOrValue( okUser(userId), CosmosDB.sql( query, String.class));
 	}
 
 	@Override
@@ -101,7 +105,7 @@ public class JavaShorts implements Shorts {
 		
 		return errorOrResult( okUser(userId1, password), user -> {
 			var f = new Following(userId1, userId2);
-			return errorOrVoid( okUser( userId2), isFollowing ? DB.insertOne( f ) : DB.deleteOne( f ));	
+			return errorOrVoid( okUser( userId2), isFollowing ? CosmosDB.insertOne( f ) : CosmosDB.deleteOne( f ));	
 		});			
 	}
 
@@ -110,7 +114,7 @@ public class JavaShorts implements Shorts {
 		Log.info(() -> format("followers : userId = %s, pwd = %s\n", userId, password));
 
 		var query = format("SELECT f.follower FROM Following f WHERE f.followee = '%s'", userId);		
-		return errorOrValue( okUser(userId, password), DB.sql(query, String.class));
+		return errorOrValue( okUser(userId, password), CosmosDB.sql(query, String.class));
 	}
 
 	@Override
@@ -120,7 +124,7 @@ public class JavaShorts implements Shorts {
 		
 		return errorOrResult( getShort(shortId), shrt -> {
 			var l = new Likes(userId, shortId, shrt.getOwnerId());
-			return errorOrVoid( okUser( userId, password), isLiked ? DB.insertOne( l ) : DB.deleteOne( l ));	
+			return errorOrVoid( okUser( userId, password), isLiked ? CosmosDB.insertOne( l ) : DB.deleteOne( l ));	
 		});
 	}
 
@@ -132,7 +136,7 @@ public class JavaShorts implements Shorts {
 			
 			var query = format("SELECT l.userId FROM Likes l WHERE l.shortId = '%s'", shortId);					
 			
-			return errorOrValue( okUser( shrt.getOwnerId(), password ), DB.sql(query, String.class));
+			return errorOrValue( okUser( shrt.getOwnerId(), password ), CosmosDB.sql(query, String.class));
 		});
 	}
 
@@ -148,7 +152,7 @@ public class JavaShorts implements Shorts {
 						f.followee = s.ownerId AND f.follower = '%s' 
 				ORDER BY s.timestamp DESC""";
 
-		return errorOrValue( okUser( userId, password), DB.sql( format(QUERY_FMT, userId, userId), String.class));		
+		return errorOrValue( okUser( userId, password), CosmosDB.sql( format(QUERY_FMT, userId, userId), String.class));		
 	}
 		
 	protected Result<User> okUser( String userId, String pwd) {
@@ -170,7 +174,7 @@ public class JavaShorts implements Shorts {
 		if( ! Token.isValid( token, userId ) )
 			return error(FORBIDDEN);
 		
-		return DB.transaction( (hibernate) -> {
+		return CosmosDB.transaction( (hibernate) -> {
 						
 			//delete shorts
 			var query1 = format("DELETE Short s WHERE s.ownerId = '%s'", userId);		

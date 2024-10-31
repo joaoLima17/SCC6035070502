@@ -33,7 +33,7 @@ public class RestUsersResource extends RestResource implements RestUsers {
 
 	@Override
 	public User deleteUser(String name, String pwd) {
-		return super.resultOrThrow( impl.deleteUser(name, pwd));
+		return (User) super.resultOrThrow( impl.deleteUser(name, pwd));
 	}
 
 	@Override

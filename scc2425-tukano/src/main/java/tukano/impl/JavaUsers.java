@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 import tukano.api.Result;
 import tukano.api.User;
 import tukano.api.Users;
-import utils.DB;
+import utils.CosmosDB;
 
 public class JavaUsers implements Users {
 	
@@ -38,7 +38,7 @@ public class JavaUsers implements Users {
 		if( badUserInfo( user ) )
 				return error(BAD_REQUEST);
 
-		return errorOrValue( DB.insertOne( user), user.getUserId() );
+		return errorOrValue( CosmosDB.insertOne( user), user.getUserId() );
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class JavaUsers implements Users {
 		if (userId == null)
 			return error(BAD_REQUEST);
 		
-		return validatedUserOrError( DB.getOne( userId, User.class), pwd);
+		return validatedUserOrError( CosmosDB.getOne( userId, User.class), pwd);
 	}
 
 	@Override
@@ -58,17 +58,17 @@ public class JavaUsers implements Users {
 		if (badUpdateUserInfo(userId, pwd, other))
 			return error(BAD_REQUEST);
 
-		return errorOrResult( validatedUserOrError(DB.getOne( userId, User.class), pwd), user -> DB.updateOne( user.updateFrom(other)));
+		return errorOrResult( validatedUserOrError(CosmosDB.getOne( userId, User.class), pwd), user -> CosmosDB.updateOne( user.updateFrom(other)));
 	}
 
 	@Override
-	public Result<User> deleteUser(String userId, String pwd) {
+	public Result<?> deleteUser(String userId, String pwd) {
 		Log.info(() -> format("deleteUser : userId = %s, pwd = %s\n", userId, pwd));
 
 		if (userId == null || pwd == null )
 			return error(BAD_REQUEST);
 
-		return errorOrResult( validatedUserOrError(DB.getOne( userId, User.class), pwd), user -> {
+		return errorOrResult( validatedUserOrError(CosmosDB.getOne( userId, User.class), pwd), user -> {
 
 			// Delete user shorts and related info asynchronously in a separate thread
 			Executors.defaultThreadFactory().newThread( () -> {
@@ -76,7 +76,7 @@ public class JavaUsers implements Users {
 				JavaBlobs.getInstance().deleteAllBlobs(userId, Token.get(userId));
 			}).start();
 			
-			return DB.deleteOne( user);
+			return CosmosDB.deleteOne( user);
 		});
 	}
 
@@ -85,8 +85,8 @@ public class JavaUsers implements Users {
 		Log.info( () -> format("searchUsers : patterns = %s\n", pattern));
 
 		var query = format("SELECT * FROM User u WHERE UPPER(u.userId) LIKE '%%%s%%'", pattern.toUpperCase());
-		var hits = DB.sql(query, User.class)
-				.stream()
+		var hits = CosmosDB.query(query, User.class)
+				.value()
 				.map(User::copyWithoutPassword)
 				.toList();
 

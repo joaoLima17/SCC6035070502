@@ -48,7 +48,7 @@ public interface Users {
 	 *         NOT_FOUND if no user exists with the provided name
 	 *         BAD_REQUEST otherwise
 	 */
-	Result<User> deleteUser(String userId, String pwd);
+	Result<?> deleteUser(String userId, String pwd);
 	
 	/**
 	 * Returns the list of users for which the pattern is a substring of the userId, case-insensitive. 
