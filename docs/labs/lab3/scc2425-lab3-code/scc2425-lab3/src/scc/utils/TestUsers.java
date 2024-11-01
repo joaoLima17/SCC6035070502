@@ -41,7 +41,8 @@ public class TestUsers
 			System.out.println( res5 );
 			
 			System.out.println( "Get for all ids");
-			var res6 = db.query(User.class, "SELECT * FROM users");
+			var res6 = db.query(User.class, "SELECT * FROM users"); 
+
 			System.out.println( res6);
 			
 		} catch( Exception x ) {
