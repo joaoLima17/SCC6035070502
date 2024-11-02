@@ -18,7 +18,7 @@ public class TukanoRestServer extends Application{
 	final private static Logger Log = Logger.getLogger(TukanoRestServer.class.getName());
 
 	static final String INETADDR_ANY = "0.0.0.0";
-	static String SERVER_BASE_URI = "http://%s:%s/rest";
+	static String SERVER_BASE_URI = "http://%s:%s/tukano/rest";
 
 	public static final int PORT = 8080;
 
@@ -32,6 +32,7 @@ public class TukanoRestServer extends Application{
 	}
 	
 	public TukanoRestServer() {
+		Token.setSecret( Args.valueOf("-secret", "Secret"));
 		serverURI = String.format(SERVER_BASE_URI, IP.hostname(), PORT);
 		resources.add(RestBlobsResource.class);
 		resources.add(RestShortsResource.class);
@@ -64,9 +65,9 @@ public class TukanoRestServer extends Application{
 
 	public static void main(String[] args) throws Exception {
 		//Args.use(args);
+		Token.setSecret( Args.valueOf("-secret", "Secret"));
 		
-		//Token.setSecret( Args.valueOf("-secret", ""));
-//		Props.load( Args.valueOf("-props", "").split(","));
+//		Props.load(azurekeys-region.props);
 		
 		//new TukanoRestServer().start();
 		return;

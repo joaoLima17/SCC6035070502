@@ -14,6 +14,7 @@ tukano\impl\JavaBlobs.class
 tukano\api\User.class
 tukano\api\rest\RestUsers.class
 tukano\impl\JavaUsers.class
+utils\CosmosDB.class
 utils\DB.class
 tukano\clients\rest\RestShortsClient$3.class
 tukano\impl\rest\TukanoRestServer.class
@@ -41,6 +42,7 @@ tukano\api\rest\RestShorts.class
 tukano\api\Result$ErrorCode.class
 test\TestCache.class
 tukano\clients\rest\RestUsersClient$1.class
+tukano\api\ShortDAO.class
 tukano\impl\rest\utils\DownloadFromStorage.class
 tukano\impl\data\Likes.class
 utils\TryCatch.class

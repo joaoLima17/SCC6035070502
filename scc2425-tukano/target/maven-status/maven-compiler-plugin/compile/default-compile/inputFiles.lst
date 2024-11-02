@@ -18,6 +18,7 @@ C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\
 C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\utils\Args.java
 C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\utils\IO.java
 C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\Result.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\utils\CosmosDB.java
 C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\utils\Sleep.java
 C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\utils\TryCatch.java
 C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\Short.java
@@ -35,6 +36,7 @@ C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\
 C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\rest\RestBlobsResource.java
 C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\data\Following.java
 C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\utils\Hibernate.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\ShortDAO.java
 C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\rest\TukanoRestServer.java
 C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\rest\utils\DownloadFromStorage.java
 C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\JavaShorts.java

@@ -23,6 +23,7 @@ public class Token {
 	
 	public static String get(String id) {
 		var timestamp = System.currentTimeMillis();
+		Log.info("XXXXXXX"+timestamp+ secret+id+"XXXXXXXXXXX");
 		var signature = Hash.of(id, timestamp, secret);
 		return String.format("%s%s%s", timestamp, DELIMITER, signature);
 	}

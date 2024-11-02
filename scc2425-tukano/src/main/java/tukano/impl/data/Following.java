@@ -11,11 +11,11 @@ import jakarta.persistence.Id;
 public class Following{
 
 	@Id 
-	@JsonProperty("id")
+	//@JsonProperty("id")
 	String follower;
 	
 	@Id 
-	@JsonProperty("id")
+	//@JsonProperty("id")
 	String followee;
 
 	public Following(String follower, String followee) {

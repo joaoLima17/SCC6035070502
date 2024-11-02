@@ -11,11 +11,11 @@ import jakarta.persistence.Id;
 public class Likes {
 	
 	@Id 
-	@JsonProperty("id")
+	//@JsonProperty("id")
 	String userId;
 	
 	@Id 
-	@JsonProperty("id")
+	//@JsonProperty("id")
 	String shortId;
 	
 	public String getOwnerId() {
