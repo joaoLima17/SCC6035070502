@@ -23,7 +23,7 @@ public class Token {
 	
 	public static String get(String id) {
 		var timestamp = System.currentTimeMillis();
-		Log.info("XXXXXXX"+timestamp+ secret+id+"XXXXXXXXXXX");
+	
 		var signature = Hash.of(id, timestamp, secret);
 		return String.format("%s%s%s", timestamp, DELIMITER, signature);
 	}
@@ -35,6 +35,7 @@ public class Token {
 			var hmac = Hash.of(id, timestamp, secret);
 			var elapsed = Math.abs(System.currentTimeMillis() - timestamp);			
 			Log.info(String.format("hash ok:%s, elapsed %s ok: %s\n", hmac.equals(bits[1]), elapsed, elapsed < MAX_TOKEN_AGE));
+			Log.info(hmac+"///"+bits[1]);
 			return hmac.equals(bits[1]) && elapsed < MAX_TOKEN_AGE;			
 		} catch( Exception x ) {
 			x.printStackTrace();

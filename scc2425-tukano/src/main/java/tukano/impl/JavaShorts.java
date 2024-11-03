@@ -85,7 +85,7 @@ public class JavaShorts implements Shorts {
 		if (shortId == null)
 			return error(BAD_REQUEST);
 
-		var query = format("SELECT count(*) FROM Likes l WHERE l.shortId = '%s'", shortId);
+		var query = format("SELECT VALUE COUNT(1) FROM Likes l WHERE l.shortId = '%s'", shortId);
 		var likes = CosmosDB.query(query, Long.class).value().toList();
 		return errorOrValue(getOne(shortId, Short.class), shrt -> shrt.copyWithLikes_And_Token(likes.get(0)));
 	}
@@ -116,6 +116,7 @@ public class JavaShorts implements Shorts {
 					jedis.del(redisId);
 			}
 			CosmosDB.deleteOne(shrt);
+			
 			return JavaBlobs.getInstance().delete(shrt.getBlobUrl(), Token.get());
 		});
 	};
