@@ -85,11 +85,10 @@ public class JavaUsers implements Users {
 
 			String redisId = "users: " + userId;
 
-			User user = JSON.decode(jedis.get(redisId), User.class);
+			String user = jedis.get(redisId);
 			if (user != null) {
-				return ok(user);
+				return ok(JSON.decode(user, User.class));
 			}
-
 			Result<User> result = validatedUserOrError(CosmosDB.getOne(userId, User.class), pwd);
 			if (result.isOK()) {
 				var userJSON = JSON.encode(result.value());

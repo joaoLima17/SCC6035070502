@@ -117,7 +117,7 @@ public class JavaShorts implements Shorts {
 			}
 			CosmosDB.deleteOne(shrt);
 			
-			return JavaBlobs.getInstance().delete(shrt.getBlobUrl(), Token.get());
+			return JavaBlobs.getInstance().delete(shrt.getBlobUrl(), Token.get(shrt.getBlobUrl()));
 		});
 	};
 
