@@ -47,7 +47,7 @@ public class JavaBlobs implements Blobs {
 	@Override
 	public Result<byte[]> download(String blobId, String token) {
 		Log.info(() -> format("download : blobId = %s, token=%s\n", blobId, token));
-
+		
 		if( ! validBlobId( blobId, token ) )
 			return error(FORBIDDEN);
 
@@ -61,6 +61,7 @@ public class JavaBlobs implements Blobs {
 		if( ! validBlobId( blobId, token ) )
 			return error(FORBIDDEN);
 
+		Log.info("PATH PARA O BLOB ID: " + toPath(blobId));
 		return storage.delete( toPath(blobId));
 	}
 	
@@ -70,8 +71,8 @@ public class JavaBlobs implements Blobs {
 
 		if( ! Token.isValid( token, userId ) )
 			return error(FORBIDDEN);
-		
-		return storage.delete( toPath(userId));
+				
+		return storage.deleteAll(userId);
 	}
 	
 	private boolean validBlobId(String blobId, String token) {		

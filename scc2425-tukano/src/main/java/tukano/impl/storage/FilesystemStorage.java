@@ -102,4 +102,10 @@ public class FilesystemStorage implements BlobStorage {
 	}
 
 	
+	public Result<Void> deleteAll(String userId) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'deleteAll'");
+	}
+
+	
 }

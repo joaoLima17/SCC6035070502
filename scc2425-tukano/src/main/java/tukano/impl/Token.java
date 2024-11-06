@@ -8,7 +8,7 @@ public class Token {
 	private static Logger Log = Logger.getLogger(Token.class.getName());
 
 	private static final String DELIMITER = "-";
-	private static final long MAX_TOKEN_AGE = 10000;
+	private static final long MAX_TOKEN_AGE = 10000*60;
 	private static String secret;
 
 	public static void setSecret(String s) {
@@ -33,7 +33,7 @@ public class Token {
 			var bits = tokenStr.split(DELIMITER);
 			var timestamp = Long.valueOf(bits[0]);
 			var hmac = Hash.of(id, timestamp, secret);
-			var elapsed = Math.abs(System.currentTimeMillis() - timestamp);			
+			var elapsed = Math.abs(System.currentTimeMillis() - timestamp);	
 			Log.info(String.format("hash ok:%s, elapsed %s ok: %s\n", hmac.equals(bits[1]), elapsed, elapsed < MAX_TOKEN_AGE));
 			Log.info(hmac+"///"+bits[1]);
 			return hmac.equals(bits[1]) && elapsed < MAX_TOKEN_AGE;			

@@ -8,28 +8,28 @@ import tukano.api.Result;
 
 public class CosmosDB {
 
-	public static <T> Result<Stream<T>> query(String query, Class<T> clazz) {
-		return CosmosDBLayer.getInstance().query(clazz, query);
+	public static <T> Result<Stream<T>> query(String query, Class<T> clazz, String type) {
+		return CosmosDBLayer.getInstance().query(clazz, query, type);
 	}
 	
-	public static <T> Result<Stream<T>> query(Class<T> clazz, String fmt, Object ... args) {
-		return CosmosDBLayer.getInstance().query(clazz, String.format(fmt, args));
+	public static <T> Result<Stream<T>> query(Class<T> clazz, String fmt, String type, Object ... args ) {
+		return CosmosDBLayer.getInstance().query(clazz, String.format(fmt, args), type);
 	}
 	
-	public static <T> Result<T> getOne(String id, Class<T> clazz) {
-		return CosmosDBLayer.getInstance().getOne(id, clazz);
+	public static <T> Result<T> getOne(String id, Class<T> clazz, String type) {
+		return CosmosDBLayer.getInstance().getOne(id, clazz, type);
 	}
 	
-	public static <T> Result<?> deleteOne(T obj) {//Result<?>
-		return CosmosDBLayer.getInstance().deleteOne(obj);
+	public static <T> Result<?> deleteOne(T obj, String type) {//Result<?>
+		return CosmosDBLayer.getInstance().deleteOne(obj, type);
 	}
 	
-	public static <T> Result<T> updateOne(T obj) {
-		return CosmosDBLayer.getInstance().updateOne(obj);
+	public static <T> Result<T> updateOne(T obj, String type) {
+		return CosmosDBLayer.getInstance().updateOne(obj, type);
 	}
 	
-	public static <T> Result<T> insertOne( T obj) {
-		return CosmosDBLayer.getInstance().insertOne(obj);
+	public static <T> Result<T> insertOne( T obj, String type) {
+		return CosmosDBLayer.getInstance().insertOne(obj, type);
 	}
 	
 	public static void close() {

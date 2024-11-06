@@ -11,7 +11,6 @@ import static tukano.api.Result.ErrorCode.FORBIDDEN;
 import static tukano.api.Result.ErrorCode.INTERNAL_ERROR;
 import static tukano.api.Result.ErrorCode.NOT_FOUND;
 
-import java.io.Console;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
@@ -63,7 +62,7 @@ public class JavaUsers implements Users {
 			var userJSON = JSON.encode(user);
 			t.set(redisId, userJSON);
 			t.expire(redisId, EXPIRATION_TIME);
-			Result<String> result = errorOrValue(CosmosDB.insertOne(user), userId);
+			Result<String> result = errorOrValue(CosmosDB.insertOne(user, "user"), userId);
 
 			if (result.isOK())
 				t.exec();
@@ -87,18 +86,17 @@ public class JavaUsers implements Users {
 
 			String user = jedis.get(redisId);
 			if (user != null) {
-				return ok(JSON.decode(user, User.class));
+				return validatedUserOrError(ok(JSON.decode(user, User.class)), pwd);
 			}
-			Result<User> result = validatedUserOrError(CosmosDB.getOne(userId, User.class), pwd);
+			Result<User> result = validatedUserOrError(CosmosDB.getOne(userId, User.class, "user"), pwd);
 			if (result.isOK()) {
 				var userJSON = JSON.encode(result.value());
 				jedis.set(redisId, userJSON);
 				jedis.expire(redisId, EXPIRATION_TIME);
+				return result;
 			} else
 				return error(NOT_FOUND);
 		}
-
-		return error(INTERNAL_ERROR);
 	}
 
 	@Override
@@ -112,22 +110,28 @@ public class JavaUsers implements Users {
 
 			String redisId = "users: " + userId;
 
-			User redisUser = JSON.decode(jedis.get(redisId), User.class);
-			if (redisUser != null) {
+			String redis = jedis.get(redisId);
+
+			if (redis != null) {
+
+				Result<User> validated = validatedUserOrError(ok(JSON.decode(redis, User.class)), pwd);
+
+				if (!validated.isOK()) return error(FORBIDDEN);
+
+				User redisUser = JSON.decode(redis, User.class);
 				jedis.del(redisId);
 
 				User updatedUser = redisUser.updateFrom(other);
-
 				jedis.set(redisId, JSON.encode(updatedUser));
 
-				return errorOrResult(validatedUserOrError(CosmosDB.getOne(userId, User.class), pwd),
-						user -> CosmosDB.updateOne(updatedUser));
+				return errorOrResult(validatedUserOrError(CosmosDB.getOne(userId, User.class, "user"), pwd),
+						user -> CosmosDB.updateOne(updatedUser, "user"));
 			}
 			// caso nao esteja na cache, adicionar
 		}
 
-		return errorOrResult(validatedUserOrError(CosmosDB.getOne(userId, User.class), pwd),
-				user -> CosmosDB.updateOne(user.updateFrom(other)));
+		return errorOrResult(validatedUserOrError(CosmosDB.getOne(userId, User.class, "user"), pwd),
+				user -> CosmosDB.updateOne(user.updateFrom(other), "user"));
 	}
 
 	@Override
@@ -140,14 +144,17 @@ public class JavaUsers implements Users {
 		try (Jedis jedis = RedisCache.getCachePool().getResource()) {
 
 			String redisId = "users: " + userId;
+			String redis = jedis.get(redisId);
 
-			User redisUser = JSON.decode(jedis.get(redisId), User.class);
-			if (redisUser != null) {
-				jedis.del(redisId);
+			if (redis != null && validatedUserOrError(ok(JSON.decode(redis, User.class)), pwd).isOK()) {
+				User redisUser = JSON.decode(redis, User.class);
+				if (redisUser != null) {
+					jedis.del(redisId);
+				}
 			}
 		}
 
-		return errorOrResult(validatedUserOrError(CosmosDB.getOne(userId, User.class), pwd), user -> {
+		return errorOrResult(validatedUserOrError(CosmosDB.getOne(userId, User.class, "user"), pwd), user -> {
 
 			// Delete user shorts and related info asynchronously in a separate thread
 			Executors.defaultThreadFactory().newThread(() -> {
@@ -155,7 +162,7 @@ public class JavaUsers implements Users {
 				JavaBlobs.getInstance().deleteAllBlobs(userId, Token.get(userId));
 			}).start();
 
-			return CosmosDB.deleteOne(user);
+			return CosmosDB.deleteOne(user, "user");
 		});
 	}
 
@@ -163,7 +170,7 @@ public class JavaUsers implements Users {
 	public Result<List<User>> searchUsers(String pattern) {
 		Log.info( () -> format("searchUsers : patterns = %s\n", pattern));
 		var query = format("SELECT * FROM User u WHERE UPPER(u.id) LIKE '%%%s%%'", pattern.toUpperCase());
-		var hits = CosmosDB.query(query, User.class)
+		var hits = CosmosDB.query(query, User.class, "user")
 				.value()
 				.map(User::copyWithoutPassword)
 				.toList();

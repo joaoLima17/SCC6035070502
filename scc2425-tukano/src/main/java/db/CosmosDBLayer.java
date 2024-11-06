@@ -20,7 +20,10 @@ public class CosmosDBLayer {
 	private static final String CONNECTION_URL = "https://scc60350.documents.azure.com:443/"; // replace with your own
 	private static final String DB_KEY = "RaSUWAOvvbWuL4LVXHEQGjeLSrZig4rgXH9FZD1YxSGDGbW4oIGVvUymjJSjRiLFaoCZjQyXb0tHACDbTLQFlQ==";
 	private static final String DB_NAME = "scc2324";
-	private static final String CONTAINER = "users";
+	private static final String USERS_CONTAINER = "users";
+	private static final String FOLLOWS_CONTAINER = "follows";
+	private static final String LIKES_CONTAINER = "likes";
+
 	
 	private static CosmosDBLayer instance;
 
@@ -43,7 +46,9 @@ public class CosmosDBLayer {
 	
 	private CosmosClient client;
 	private CosmosDatabase db;
-	private CosmosContainer container;
+	private CosmosContainer users_container;
+	private CosmosContainer follows_container;
+	private CosmosContainer likes_container;
 	
 	public CosmosDBLayer(CosmosClient client) {
 		this.client = client;
@@ -53,32 +58,50 @@ public class CosmosDBLayer {
 		if( db != null)
 			return;
 		db = client.getDatabase(DB_NAME);
-		container = db.getContainer(CONTAINER);
+		users_container = db.getContainer(USERS_CONTAINER);
+		follows_container = db.getContainer(FOLLOWS_CONTAINER);
+		likes_container = db.getContainer(LIKES_CONTAINER);
 	}
 
 	public void close() {
 		client.close();
 	}
-	
-	public <T> Result<T> getOne(String id, Class<T> clazz) {
-		return tryCatch( () -> container.readItem(id, new PartitionKey(id), clazz).getItem());
+
+	private CosmosContainer getContainer(String type) {
+		switch(type) {
+			case("user"):
+				return users_container;
+			case("follow"):
+				return follows_container;
+			case("like"):
+				return likes_container;
+			default:
+				return users_container;
+		}
 	}
 	
-	public <T> Result<?> deleteOne(T obj) {
-		return tryCatch( () -> container.deleteItem(obj, new CosmosItemRequestOptions()).getItem());
+	public <T> Result<T> getOne(String id, Class<T> clazz, String type) {
+		return tryCatch( () -> getContainer(type).readItem(id, new PartitionKey(id), clazz).getItem());
 	}
 	
-	public <T> Result<T> updateOne(T obj) {
-		return tryCatch( () -> container.upsertItem(obj).getItem());
+	public <T> Result<?> deleteOne(T obj, String type) {
+		
+			
+		
+		return tryCatch( () -> getContainer(type).deleteItem(obj, new CosmosItemRequestOptions()).getItem());
 	}
 	
-	public <T> Result<T> insertOne( T obj) {
-		return tryCatch( () -> container.createItem(obj).getItem());
+	public <T> Result<T> updateOne(T obj, String type) {
+		return tryCatch( () -> getContainer(type).upsertItem(obj).getItem());
 	}
 	
-	public <T> Result<Stream<T>> query(Class<T> clazz, String queryStr) {
+	public <T> Result<T> insertOne( T obj, String type) {
+		return tryCatch( () -> getContainer(type).createItem(obj).getItem());
+	}
+	
+	public <T> Result<Stream<T>> query(Class<T> clazz, String queryStr, String type) {
 		return tryCatch(() -> {
-			var res = container.queryItems(queryStr, new CosmosQueryRequestOptions(), clazz);
+			var res = getContainer(type).queryItems(queryStr, new CosmosQueryRequestOptions(), clazz);
 			return res.stream();
 		});
 	}
@@ -88,7 +111,7 @@ public class CosmosDBLayer {
 			init();
 			return Result.ok(supplierFunc.get());			
 		} catch( CosmosException ce ) {
-			//ce.printStackTrace();
+			ce.printStackTrace();
 			return Result.error ( errorCodeFromStatus(ce.getStatusCode() ));		
 		} catch( Exception x ) {
 			x.printStackTrace();

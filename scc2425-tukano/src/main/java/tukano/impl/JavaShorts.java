@@ -66,7 +66,7 @@ public class JavaShorts implements Shorts {
 				var userJSON = JSON.encode(user);
 				t.set(redisId, userJSON);
 				t.expire(redisId, EXPIRATION_TIME);
-				Result<Short> result = errorOrValue(CosmosDB.insertOne(shrt), s -> s.copyWithLikes_And_Token(0));
+				Result<Short> result = errorOrValue(CosmosDB.insertOne(shrt, "short"), s -> s.copyWithLikes_And_Token(0));
 
 				if (result.isOK())
 					t.exec();
@@ -86,8 +86,8 @@ public class JavaShorts implements Shorts {
 			return error(BAD_REQUEST);
 
 		var query = format("SELECT VALUE COUNT(1) FROM Likes l WHERE l.shortId = '%s'", shortId);
-		var likes = CosmosDB.query(query, Long.class).value().toList();
-		return errorOrValue(getOne(shortId, Short.class), shrt -> shrt.copyWithLikes_And_Token(likes.get(0)));
+		var likes = CosmosDB.query(query, Long.class, "short").value().toList();
+		return errorOrValue(getOne(shortId, Short.class, "short"), shrt -> shrt.copyWithLikes_And_Token(likes.get(0)));
 	}
 
 	@Override
@@ -115,9 +115,9 @@ public class JavaShorts implements Shorts {
 				if (jedis.exists(redisId)) 
 					jedis.del(redisId);
 			}
-			CosmosDB.deleteOne(shrt);
+			CosmosDB.deleteOne(shrt, "short");
 			
-			return JavaBlobs.getInstance().delete(shrt.getBlobUrl(), Token.get(shrt.getBlobUrl()));
+			return JavaBlobs.getInstance().delete(shortId, Token.get(shortId));
 		});
 	};
 
@@ -126,7 +126,7 @@ public class JavaShorts implements Shorts {
 		Log.info(() -> format("getShorts : userId = %s\n", userId));
 
 		var query = format("SELECT s.shortId FROM Short s WHERE s.ownerId = '%s'", userId);
-		return errorOrValue(okUser(userId), CosmosDB.query(query, String.class).value().toList());
+		return errorOrValue(okUser(userId), CosmosDB.query(query, String.class, "short").value().toList());
 	}
 
 	@Override
@@ -135,8 +135,12 @@ public class JavaShorts implements Shorts {
 				isFollowing, password));
 
 		return errorOrResult(okUser(userId1, password), user -> {
-			var f = new Following(userId1, userId2);
-			return errorOrVoid(okUser(userId2), isFollowing ? CosmosDB.insertOne(f) : CosmosDB.deleteOne(f));
+			var f = new Following(userId2, userId1);
+			//Result<Object> res1 = CosmosDB.insertOne(f);
+			//Result<Follow> resTeste = CosmosDB.getOne(f);
+			//Log.info("RESULTADO DO INSERT ONEEEEEEEEE:::::::: " + res1);
+			Result<Void> res = errorOrVoid(okUser(userId2), isFollowing ? CosmosDB.insertOne(f, "follow") : CosmosDB.deleteOne(f, "follow"));
+			return res;
 		});
 	}
 
@@ -145,7 +149,7 @@ public class JavaShorts implements Shorts {
 		Log.info(() -> format("followers : userId = %s, pwd = %s\n", userId, password));
 
 		var query = format("SELECT f.follower FROM Following f WHERE f.followee = '%s'", userId);
-		return errorOrValue(okUser(userId, password), CosmosDB.query(query, String.class).value().toList());
+		return errorOrValue(okUser(userId, password), CosmosDB.query(query, String.class, "follow").value().toList());
 	}
 
 	@Override
@@ -155,7 +159,7 @@ public class JavaShorts implements Shorts {
 
 		return errorOrResult(getShort(shortId), shrt -> {
 			var l = new Likes(userId, shortId, shrt.getOwnerId());
-			return errorOrVoid(okUser(userId, password), isLiked ? CosmosDB.insertOne(l) : CosmosDB.deleteOne(l));
+			return errorOrVoid(okUser(userId, password), isLiked ? CosmosDB.insertOne(l, "like") : CosmosDB.deleteOne(l, "like"));
 		});
 	}
 
@@ -168,7 +172,7 @@ public class JavaShorts implements Shorts {
 			var query = format("SELECT l.userId FROM Likes l WHERE l.shortId = '%s'", shortId);
 
 			return errorOrValue(okUser(shrt.getOwnerId(), password),
-					CosmosDB.query(query, String.class).value().toList());
+					CosmosDB.query(query, String.class, "like").value().toList());
 		});
 	}
 
@@ -176,6 +180,7 @@ public class JavaShorts implements Shorts {
 	public Result<List<String>> getFeed(String userId, String password) {
 		Log.info(() -> format("getFeed : userId = %s, pwd = %s\n", userId, password));
 
+		//TODO: mudar query
 		final var QUERY_FMT = """
 				SELECT s.shortId, s.timestamp FROM Short s WHERE	s.ownerId = '%s'
 				UNION
@@ -185,7 +190,7 @@ public class JavaShorts implements Shorts {
 				ORDER BY s.timestamp DESC""";
 
 		return errorOrValue(okUser(userId, password),
-				CosmosDB.query(format(QUERY_FMT, userId, userId), String.class).value().toList());
+				CosmosDB.query(format(QUERY_FMT, userId, userId), String.class, "short").value().toList());
 	}
 
 	protected Result<User> okUser(String userId, String pwd) {
@@ -196,8 +201,10 @@ public class JavaShorts implements Shorts {
 		var res = okUser(userId, "");
 		if (res.error() == FORBIDDEN)
 			return ok();
-		else
+		else {
+			Log.info("RESPOSTA DO OK USER: " + res.error().toString());
 			return error(res.error());
+		}
 	}
 
 	@Override
@@ -228,8 +235,16 @@ public class JavaShorts implements Shorts {
 		 * 
 		 * });
 		 */
-		var query1 = format("DELETE Short s WHERE s.ownerId = '%s'", userId);
-		CosmosDB.query(query1, Short.class);
+		var query1 = format("SELECT * FROM Short s WHERE s.userId = '%s'", userId);
+		List<Short> query = CosmosDB.query(query1, Short.class, "short").value().toList();
+		
+		for (Short shrt : query) {
+			CosmosDB.deleteOne(shrt, "short");
+		}
+
+		//TODO: delete dos follows
+
+		//TODO: delete dos likes
 
 		return Result.ok();
 	}

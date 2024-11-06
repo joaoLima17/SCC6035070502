@@ -15,7 +15,7 @@ public class Following{
 	String follower;
 	
 	@Id 
-	@JsonProperty("id")
+	@JsonProperty("followeeId")
 	String followee;
 
 	public Following(String follower, String followee) {
