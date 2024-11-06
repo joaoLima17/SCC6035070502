@@ -21,7 +21,7 @@ public class Short {
 	@Id
 	@JsonProperty("id")
 	String shortId;
-	@JsonProperty("userId")
+	@JsonProperty("ownerId")
 	String ownerId;
 	String blobUrl;
 	long timestamp;

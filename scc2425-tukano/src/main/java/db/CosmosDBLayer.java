@@ -1,6 +1,7 @@
 package db;
 
 import java.util.function.Supplier;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import com.azure.cosmos.ConsistencyLevel;
@@ -14,16 +15,18 @@ import com.azure.cosmos.models.CosmosQueryRequestOptions;
 import com.azure.cosmos.models.PartitionKey;
 import tukano.api.Result;
 import tukano.api.Result.ErrorCode;
+import tukano.impl.JavaBlobs;
 
 
 public class CosmosDBLayer {
+	private static Logger Log = Logger.getLogger(CosmosDBLayer.class.getName());
 	private static final String CONNECTION_URL = "https://scc60350.documents.azure.com:443/"; // replace with your own
 	private static final String DB_KEY = "RaSUWAOvvbWuL4LVXHEQGjeLSrZig4rgXH9FZD1YxSGDGbW4oIGVvUymjJSjRiLFaoCZjQyXb0tHACDbTLQFlQ==";
 	private static final String DB_NAME = "scc2324";
 	private static final String USERS_CONTAINER = "users";
 	private static final String FOLLOWS_CONTAINER = "follows";
 	private static final String LIKES_CONTAINER = "likes";
-
+	
 	
 	private static CosmosDBLayer instance;
 
@@ -61,6 +64,7 @@ public class CosmosDBLayer {
 		users_container = db.getContainer(USERS_CONTAINER);
 		follows_container = db.getContainer(FOLLOWS_CONTAINER);
 		likes_container = db.getContainer(LIKES_CONTAINER);
+		
 	}
 
 	public void close() {

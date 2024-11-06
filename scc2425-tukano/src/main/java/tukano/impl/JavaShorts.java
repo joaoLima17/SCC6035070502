@@ -9,10 +9,15 @@ import static tukano.api.Result.ok;
 import static tukano.api.Result.ErrorCode.BAD_REQUEST;
 import static tukano.api.Result.ErrorCode.FORBIDDEN;
 import static utils.CosmosDB.getOne;
+import static utils.CosmosDB.query;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import cache.RedisCache;
 import redis.clients.jedis.Jedis;
@@ -66,7 +71,8 @@ public class JavaShorts implements Shorts {
 				var userJSON = JSON.encode(user);
 				t.set(redisId, userJSON);
 				t.expire(redisId, EXPIRATION_TIME);
-				Result<Short> result = errorOrValue(CosmosDB.insertOne(shrt, "short"), s -> s.copyWithLikes_And_Token(0));
+				Result<Short> result = errorOrValue(CosmosDB.insertOne(shrt, "shorts"),
+						s -> s.copyWithLikes_And_Token(0));
 
 				if (result.isOK())
 					t.exec();
@@ -86,8 +92,8 @@ public class JavaShorts implements Shorts {
 			return error(BAD_REQUEST);
 
 		var query = format("SELECT VALUE COUNT(1) FROM Likes l WHERE l.shortId = '%s'", shortId);
-		var likes = CosmosDB.query(query, Long.class, "short").value().toList();
-		return errorOrValue(getOne(shortId, Short.class, "short"), shrt -> shrt.copyWithLikes_And_Token(likes.get(0)));
+		var likes = CosmosDB.query(query, Long.class, "shorts").value().toList();
+		return errorOrValue(getOne(shortId, Short.class, "shorts"), shrt -> shrt.copyWithLikes_And_Token(likes.get(0)));
 	}
 
 	@Override
@@ -111,12 +117,12 @@ public class JavaShorts implements Shorts {
 			try (Jedis jedis = RedisCache.getCachePool().getResource()) {
 
 				String redisId = "shorts: " + shortId;
-				
-				if (jedis.exists(redisId)) 
+
+				if (jedis.exists(redisId))
 					jedis.del(redisId);
 			}
-			CosmosDB.deleteOne(shrt, "short");
-			
+			CosmosDB.deleteOne(shrt, "shorts");
+
 			return JavaBlobs.getInstance().delete(shortId, Token.get(shortId));
 		});
 	};
@@ -125,8 +131,14 @@ public class JavaShorts implements Shorts {
 	public Result<List<String>> getShorts(String userId) {
 		Log.info(() -> format("getShorts : userId = %s\n", userId));
 
-		var query = format("SELECT s.shortId FROM Short s WHERE s.ownerId = '%s'", userId);
-		return errorOrValue(okUser(userId), CosmosDB.query(query, String.class, "short").value().toList());
+		var query = format("SELECT * FROM Short s WHERE s.ownerId = '%s'", userId);
+		List<Short> shorts = CosmosDB.query(query, Short.class, "shorts").value().toList();
+
+		List<String> ids = shorts.stream()
+				.map(Short::getShortId) 
+				.collect(Collectors.toList());
+
+		return errorOrValue(okUser(userId), ids);
 	}
 
 	@Override
@@ -136,14 +148,13 @@ public class JavaShorts implements Shorts {
 
 		return errorOrResult(okUser(userId1, password), user -> {
 			var f = new Following(userId2, userId1);
-			var query = format("SELECT * FROM Following f WHERE f.id = '%s'", userId1+'|'+ userId2);
-			//Result<Object> res1 = CosmosDB.insertOne(f);
-			//Result<Follow> resTeste = CosmosDB.getOne(f);
-			//Log.info("RESULTADO DO INSERT ONEEEEEEEEE:::::::: " + res1);
+			var query = format("SELECT * FROM Following f WHERE f.id = '%s'", userId1 + '|' + userId2);
+
 			var s = CosmosDB.query(query, Following.class, "follow").value().toList();
-			if((!isFollowing&&s.isEmpty())|| (isFollowing&&!s.isEmpty()))
-			return ok();
-			Result<Void> res = errorOrVoid(okUser(userId2), isFollowing ? CosmosDB.insertOne(f, "follow") : CosmosDB.deleteOne(f, "follow"));
+			if ((!isFollowing && s.isEmpty()) || (isFollowing && !s.isEmpty()))
+				return ok();
+			Result<Void> res = errorOrVoid(okUser(userId2),
+					isFollowing ? CosmosDB.insertOne(f, "follow") : CosmosDB.deleteOne(f, "follow"));
 			return res;
 		});
 	}
@@ -163,7 +174,8 @@ public class JavaShorts implements Shorts {
 
 		return errorOrResult(getShort(shortId), shrt -> {
 			var l = new Likes(userId, shortId, shrt.getOwnerId());
-			return errorOrVoid(okUser(userId, password), isLiked ? CosmosDB.insertOne(l, "like") : CosmosDB.deleteOne(l, "like"));
+			return errorOrVoid(okUser(userId, password),
+					isLiked ? CosmosDB.insertOne(l, "like") : CosmosDB.deleteOne(l, "like"));
 		});
 	}
 
@@ -181,20 +193,40 @@ public class JavaShorts implements Shorts {
 	}
 
 	@Override
-	public Result<List<String>> getFeed(String userId, String password) {
+ 	public Result<List<String>> getFeed(String userId, String password) {
 		Log.info(() -> format("getFeed : userId = %s, pwd = %s\n", userId, password));
 
-		//TODO: mudar query
-		final var QUERY_FMT = """
-				SELECT s.shortId, s.timestamp FROM Short s WHERE s.ownerId = '%s'
-				UNION
-				SELECT s.shortId, s.timestamp FROM Short s, Following f
-					WHERE
-						f.followee = s.ownerId AND f.follower = '%s'
-				ORDER BY s.timestamp DESC""";
+		/*
+		 * final var QUERY_FMT = """
+		 * SELECT s.shortId FROM Short s WHERE s.ownerId = '%s'
+		 * UNION
+		 * SELECT s.shortId, s.timestamp FROM Short s, Following f
+		 * WHERE
+		 * f.followee = s.ownerId AND f.follower = '%s'
+		 * ORDER BY s.timestamp DESC""";
+		 */
 
-		return errorOrValue(okUser(userId, password),
-				CosmosDB.query(format(QUERY_FMT, userId, userId), String.class, "short").value().toList());
+		var r = okUser(userId, password);
+		if (!r.isOK())
+			return error(r.error());
+
+		List<String> followeeIds = followers(userId, password).value();
+		List<Short> shortList = new ArrayList<>();
+
+		for (String id : followeeIds) {
+			var query2 = String.format("SELECT * FROM Short s WHERE s.ownerId = '%s'", id);
+			List<Short> followeeShorts = CosmosDB.query(query2, Short.class, "shorts").value().toList();
+			
+			shortList.addAll(followeeShorts);
+		}
+		
+		shortList.sort(Comparator.comparing(Short::getTimestamp).reversed());		
+
+		List<String> sortedFeed = shortList.stream()
+				.map(Short::getShortId) 
+				.collect(Collectors.toList());
+		
+		return ok(sortedFeed);
 	}
 
 	protected Result<User> okUser(String userId, String pwd) {
@@ -206,7 +238,6 @@ public class JavaShorts implements Shorts {
 		if (res.error() == FORBIDDEN)
 			return ok();
 		else {
-			Log.info("RESPOSTA DO OK USER: " + res.error().toString());
 			return error(res.error());
 		}
 	}
@@ -239,17 +270,54 @@ public class JavaShorts implements Shorts {
 		 * 
 		 * });
 		 */
-		var query1 = format("SELECT * FROM Short s WHERE s.userId = '%s'", userId);
-		List<Short> query = CosmosDB.query(query1, Short.class, "short").value().toList();
-		var query2 = format("DELETE Following f WHERE f.followerId = '%s' OR f.id = '%s'", userId, userId);
-		CosmosDB.query(query2, Following.class , "follower");
-		var query3 =format("DELETE Likes l WHERE l.ownerId = '%s' OR l.userId = '%s'", userId,userId);
-		CosmosDB.query(query3, Likes.class, "like");
-		for (Short shrt : query) {
-			CosmosDB.deleteOne(shrt, "short");
+		deleteAllLikes( userId,  password);
+		deleteAllFollows(userId, password);
+		List<String> shorts = getShorts(userId).value();
+
+		for (String id : shorts) {
+			deleteShort(id, password);
 		}
 
 		return Result.ok();
 	}
 
+	private Result<Void> deleteAllLikes(String userId, String password) {
+		Log.info(() -> format("deleteAllLikes : userId = %s, password = %s\n", userId, password));
+
+		var query1 = format("SELECT * FROM Likes l WHERE l.ownerId = '%s'", userId);
+		List<Likes> likesReceived = CosmosDB.query(query1, Likes.class, "like").value().toList();
+
+		var query2 = format("SELECT * FROM Likes l WHERE l.userId = '%s'", userId);
+		List<Likes> likesGiven = CosmosDB.query(query2, Likes.class, "like").value().toList();
+
+		for (Likes like : likesReceived) {
+			like(like.getShortId(), like.getUserId(), false, password);
+		}
+		for (Likes like : likesGiven) {
+			like(like.getShortId(), like.getUserId(), false, password);
+		}
+
+		return Result.ok();
+	}
+
+	private Result<Void> deleteAllFollows(String userId, String password) {
+		Log.info(() -> format("deleteAllFollows : userId = %s, password = %s\n", userId, password));
+
+		var query1 = format("SELECT * FROM Following f WHERE f.follower = '%s'", userId);
+		List<Following> followers = CosmosDB.query(query1, Following.class, "follow").value().toList();
+
+		var query2 = format("SELECT * FROM Following f WHERE f.followee = '%s'", userId);
+		List<Following> followees = CosmosDB.query(query2, Following.class, "follow").value().toList();
+
+		for (Following f : followers) {
+			follow(userId, f.getFollowee(), false, password);
+		}
+		
+		for (Following f : followees) {
+			CosmosDB.deleteOne(f, "follow");
+		}
+		
+		return Result.ok();
+	}
+	
 }

@@ -17,7 +17,6 @@ import java.util.logging.Logger;
 
 import cache.RedisCache;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.Transaction;
 import tukano.api.Result;
 import tukano.api.User;
 import tukano.api.Users;
@@ -54,22 +53,14 @@ public class JavaUsers implements Users {
 		try (Jedis jedis = RedisCache.getCachePool().getResource()) {
 
 			if (jedis.exists(redisId)) {
-				return Result.error(CONFLICT);
+				jedis.del(redisId);
 			}
 
-			Transaction t = jedis.multi();
-
 			var userJSON = JSON.encode(user);
-			t.set(redisId, userJSON);
-			t.expire(redisId, EXPIRATION_TIME);
-			Result<String> result = errorOrValue(CosmosDB.insertOne(user, "user"), userId);
+			jedis.set(redisId, userJSON);
+			jedis.expire(redisId, EXPIRATION_TIME);
 
-			if (result.isOK())
-				t.exec();
-			else
-				t.discard();
-
-			return result;
+			return errorOrValue(CosmosDB.insertOne(user, "user"), userId);
 		}
 	}
 
@@ -83,19 +74,22 @@ public class JavaUsers implements Users {
 		try (Jedis jedis = RedisCache.getCachePool().getResource()) {
 
 			String redisId = "users: " + userId;
-
+			
 			String user = jedis.get(redisId);
 			if (user != null) {
 				return validatedUserOrError(ok(JSON.decode(user, User.class)), pwd);
 			}
-			Result<User> result = validatedUserOrError(CosmosDB.getOne(userId, User.class, "user"), pwd);
+
+			Result<User> res = CosmosDB.getOne(userId, User.class, "user");
+			Result<User> result = validatedUserOrError(res, pwd);
 			if (result.isOK()) {
 				var userJSON = JSON.encode(result.value());
 				jedis.set(redisId, userJSON);
 				jedis.expire(redisId, EXPIRATION_TIME);
 				return result;
-			} else
-				return error(NOT_FOUND);
+			} else {
+				return error(result.error());
+			}
 		}
 	}
 
@@ -116,7 +110,8 @@ public class JavaUsers implements Users {
 
 				Result<User> validated = validatedUserOrError(ok(JSON.decode(redis, User.class)), pwd);
 
-				if (!validated.isOK()) return error(FORBIDDEN);
+				if (!validated.isOK())
+					return error(FORBIDDEN);
 
 				User redisUser = JSON.decode(redis, User.class);
 				jedis.del(redisId);
@@ -127,7 +122,6 @@ public class JavaUsers implements Users {
 				return errorOrResult(validatedUserOrError(CosmosDB.getOne(userId, User.class, "user"), pwd),
 						user -> CosmosDB.updateOne(updatedUser, "user"));
 			}
-			// caso nao esteja na cache, adicionar
 		}
 
 		return errorOrResult(validatedUserOrError(CosmosDB.getOne(userId, User.class, "user"), pwd),
@@ -141,25 +135,37 @@ public class JavaUsers implements Users {
 		if (userId == null || pwd == null)
 			return error(BAD_REQUEST);
 
-		try (Jedis jedis = RedisCache.getCachePool().getResource()) {
-
-			String redisId = "users: " + userId;
-			String redis = jedis.get(redisId);
-
-			if (redis != null && validatedUserOrError(ok(JSON.decode(redis, User.class)), pwd).isOK()) {
-				User redisUser = JSON.decode(redis, User.class);
-				if (redisUser != null) {
-					jedis.del(redisId);
-				}
-			}
-		}
-
 		return errorOrResult(validatedUserOrError(CosmosDB.getOne(userId, User.class, "user"), pwd), user -> {
 
 			// Delete user shorts and related info asynchronously in a separate thread
 			Executors.defaultThreadFactory().newThread(() -> {
+				/*
+				 * List<String> userShortsList =
+				 * JavaShorts.getInstance().getShorts(userId).value();
+				 * var query =
+				 * format("SELECT * FROM Likes l WHERE l.ownerId = '%s' OR l.userId = '%s'",
+				 * userId, userId);
+				 * CosmosDB.query(query3, Likes.class, "like");
+				 * 
+				 * for (String shortId : userShortsList) {
+				 * List<String> shortLikesList = JavaShorts.getInstance().likes(shortId,
+				 * pwd).value();
+				 * }
+				 */
+				
 				JavaShorts.getInstance().deleteAllShorts(userId, pwd, Token.get(userId));
 				JavaBlobs.getInstance().deleteAllBlobs(userId, Token.get(userId));
+
+
+				try (Jedis jedis = RedisCache.getCachePool().getResource()) {
+
+					String redisId = "users: " + userId;
+					String redis = jedis.get(redisId);
+
+					if (redis != null && validatedUserOrError(ok(JSON.decode(redis, User.class)), pwd).isOK()) {
+						jedis.del(redisId);
+					}
+				}
 			}).start();
 
 			return CosmosDB.deleteOne(user, "user");
@@ -168,7 +174,7 @@ public class JavaUsers implements Users {
 
 	@Override
 	public Result<List<User>> searchUsers(String pattern) {
-		Log.info( () -> format("searchUsers : patterns = %s\n", pattern));
+		Log.info(() -> format("searchUsers : patterns = %s\n", pattern));
 		var query = format("SELECT * FROM User u WHERE UPPER(u.id) LIKE '%%%s%%'", pattern.toUpperCase());
 		var hits = CosmosDB.query(query, User.class, "user")
 				.value()

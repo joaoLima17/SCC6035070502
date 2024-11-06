@@ -61,7 +61,6 @@ public class JavaBlobs implements Blobs {
 		if( ! validBlobId( blobId, token ) )
 			return error(FORBIDDEN);
 
-		Log.info("PATH PARA O BLOB ID: " + toPath(blobId));
 		return storage.delete( toPath(blobId));
 	}
 	
