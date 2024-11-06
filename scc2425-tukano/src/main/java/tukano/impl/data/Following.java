@@ -11,17 +11,17 @@ import jakarta.persistence.Id;
 public class Following{
 
 	@Id 
-	@JsonProperty("followerId")
 	String follower;
-	
+	@JsonProperty("id")
+	String id;
 	@Id 
-	@JsonProperty("followeeId")
 	String followee;
 
 	public Following(String follower, String followee) {
 		super();
 		this.follower = follower;
 		this.followee = followee;
+		this.id = followee + '|'+ follower;
 	}
 
 	public Following() {
@@ -31,7 +31,9 @@ public class Following{
 	public String getFollower() {
 		return follower;
 	}
-
+	public String getid() {
+		return id;
+	}
 	public void setFollower(String follower) {
 		this.follower = follower;
 	}

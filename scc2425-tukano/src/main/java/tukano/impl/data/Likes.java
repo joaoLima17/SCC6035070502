@@ -11,11 +11,12 @@ import jakarta.persistence.Id;
 public class Likes {
 	
 	@Id 
-	@JsonProperty("id")
-	String userId;
 	
+	String userId;
+	@JsonProperty("id")
+	String id;
 	@Id 
-	@JsonProperty("shortId")
+	
 	String shortId;
 	
 	public String getOwnerId() {
@@ -34,8 +35,11 @@ public class Likes {
 		this.userId = userId;
 		this.shortId = shortId;
 		this.ownerId = ownerId;
+		this.id = shortId+'|'+userId;
 	}
-
+	public String getid() {
+		return id;
+	}
 	public String getUserId() {
 		return userId;
 	}

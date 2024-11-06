@@ -136,9 +136,13 @@ public class JavaShorts implements Shorts {
 
 		return errorOrResult(okUser(userId1, password), user -> {
 			var f = new Following(userId2, userId1);
+			var query = format("SELECT * FROM Following f WHERE f.id = '%s'", userId1+'|'+ userId2);
 			//Result<Object> res1 = CosmosDB.insertOne(f);
 			//Result<Follow> resTeste = CosmosDB.getOne(f);
 			//Log.info("RESULTADO DO INSERT ONEEEEEEEEE:::::::: " + res1);
+			var s = CosmosDB.query(query, Following.class, "follow").value().toList();
+			if((!isFollowing&&s.isEmpty())|| (isFollowing&&!s.isEmpty()))
+			return ok();
 			Result<Void> res = errorOrVoid(okUser(userId2), isFollowing ? CosmosDB.insertOne(f, "follow") : CosmosDB.deleteOne(f, "follow"));
 			return res;
 		});
@@ -148,7 +152,7 @@ public class JavaShorts implements Shorts {
 	public Result<List<String>> followers(String userId, String password) {
 		Log.info(() -> format("followers : userId = %s, pwd = %s\n", userId, password));
 
-		var query = format("SELECT f.follower FROM Following f WHERE f.followee = '%s'", userId);
+		var query = format("SELECT VALUE f.follower FROM Following f WHERE f.followee = '%s'", userId);
 		return errorOrValue(okUser(userId, password), CosmosDB.query(query, String.class, "follow").value().toList());
 	}
 
@@ -169,7 +173,7 @@ public class JavaShorts implements Shorts {
 
 		return errorOrResult(getShort(shortId), shrt -> {
 
-			var query = format("SELECT l.userId FROM Likes l WHERE l.shortId = '%s'", shortId);
+			var query = format("SELECT VALUE l.userId FROM Likes l WHERE l.shortId = '%s'", shortId);
 
 			return errorOrValue(okUser(shrt.getOwnerId(), password),
 					CosmosDB.query(query, String.class, "like").value().toList());
@@ -182,7 +186,7 @@ public class JavaShorts implements Shorts {
 
 		//TODO: mudar query
 		final var QUERY_FMT = """
-				SELECT s.shortId, s.timestamp FROM Short s WHERE	s.ownerId = '%s'
+				SELECT s.shortId, s.timestamp FROM Short s WHERE s.ownerId = '%s'
 				UNION
 				SELECT s.shortId, s.timestamp FROM Short s, Following f
 					WHERE
@@ -237,14 +241,13 @@ public class JavaShorts implements Shorts {
 		 */
 		var query1 = format("SELECT * FROM Short s WHERE s.userId = '%s'", userId);
 		List<Short> query = CosmosDB.query(query1, Short.class, "short").value().toList();
-		
+		var query2 = format("DELETE Following f WHERE f.followerId = '%s' OR f.id = '%s'", userId, userId);
+		CosmosDB.query(query2, Following.class , "follower");
+		var query3 =format("DELETE Likes l WHERE l.ownerId = '%s' OR l.userId = '%s'", userId,userId);
+		CosmosDB.query(query3, Likes.class, "like");
 		for (Short shrt : query) {
 			CosmosDB.deleteOne(shrt, "short");
 		}
-
-		//TODO: delete dos follows
-
-		//TODO: delete dos likes
 
 		return Result.ok();
 	}

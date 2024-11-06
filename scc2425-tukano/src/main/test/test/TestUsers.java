@@ -22,26 +22,26 @@ public class TestUsers
 			var id1 = "john";			
 			var user1 = new User(id1, "12345", "john@nova.pt", "John Smith");
 			
-			var res1 = db.insertOne( user1);
+			var res1 = db.insertOne( user1, "user");
 			System.out.println( res1 );
 
-			var res2 = db.getOne(id1, UserDAO.class);
+			var res2 = db.getOne(id1, UserDAO.class, "user");
 			System.out.println( res2 );
 			
 			var id2 = "mary";
 			var user2 = new User(id2, "12345", "mary@nova.pt", "Mary Smith");
-			var res3 = db.insertOne( user2);
+			var res3 = db.insertOne( user2, "user");
 			System.out.println( res3 );
 
-			var res4 = db.getOne(id2, User.class);
+			var res4 = db.getOne(id2, User.class, "user");
 			System.out.println( res4 );
 
 			System.out.println( "Get for id = " + id1);
-			var res5 = db.query(User.class, String.format("SELECT * FROM users WHERE users.id=\"%s\"", id1));
+			var res5 = db.query(User.class, String.format("SELECT * FROM users WHERE users.id=\"%s\"", id1), "user");
 			System.out.println( res5 );
 			
 			System.out.println( "Get for all ids");
-			var res6 = db.query(User.class, "SELECT * FROM users");
+			var res6 = db.query(User.class, "SELECT * FROM users", "user");
 			System.out.println( res6);
 			
 		} catch( Exception x ) {
