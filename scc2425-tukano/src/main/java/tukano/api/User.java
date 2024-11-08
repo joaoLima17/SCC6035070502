@@ -1,19 +1,28 @@
 package tukano.api;
 
 
+
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "PostgreUser")
 public class User {
 	
-	@Id
 	@JsonProperty("id")
+	@Id
+	@Column(name = "userId")
 	private String userId;
+	@Column(name = "pwd")
 	private String pwd;
+	@Column(name = "email")
 	private String email;	
+	@Column(name = "displayName")
 	private String displayName;
 
 	public User() {}

@@ -6,10 +6,9 @@ import static tukano.api.Result.errorOrResult;
 import static tukano.api.Result.errorOrValue;
 import static tukano.api.Result.ok;
 import static tukano.api.Result.ErrorCode.BAD_REQUEST;
-import static tukano.api.Result.ErrorCode.CONFLICT;
+
 import static tukano.api.Result.ErrorCode.FORBIDDEN;
-import static tukano.api.Result.ErrorCode.INTERNAL_ERROR;
-import static tukano.api.Result.ErrorCode.NOT_FOUND;
+
 
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -21,12 +20,13 @@ import tukano.api.Result;
 import tukano.api.User;
 import tukano.api.Users;
 import utils.CosmosDB;
+import utils.DB;
 import utils.JSON;
 
 public class JavaUsers implements Users {
 
 	private static final int EXPIRATION_TIME = 60 * 60; // 1 hour
-
+	private static final boolean POSTGRE = false;
 	private static Logger Log = Logger.getLogger(JavaUsers.class.getName());
 
 	private static Users instance;
@@ -38,6 +38,7 @@ public class JavaUsers implements Users {
 	}
 
 	private JavaUsers() {
+		
 	}
 
 	@Override
@@ -59,7 +60,8 @@ public class JavaUsers implements Users {
 			var userJSON = JSON.encode(user);
 			jedis.set(redisId, userJSON);
 			jedis.expire(redisId, EXPIRATION_TIME);
-
+			if(POSTGRE)
+			return errorOrValue( DB.insertOne( user), user.getUserId() );
 			return errorOrValue(CosmosDB.insertOne(user, "user"), userId);
 		}
 	}
@@ -79,8 +81,11 @@ public class JavaUsers implements Users {
 			if (user != null) {
 				return validatedUserOrError(ok(JSON.decode(user, User.class)), pwd);
 			}
-
-			Result<User> res = CosmosDB.getOne(userId, User.class, "user");
+			Result<User> res;
+			if(POSTGRE)
+				res = DB.getOne(userId, User.class);
+			else
+				res = CosmosDB.getOne(userId, User.class, "user");
 			Result<User> result = validatedUserOrError(res, pwd);
 			if (result.isOK()) {
 				var userJSON = JSON.encode(result.value());
@@ -118,12 +123,16 @@ public class JavaUsers implements Users {
 
 				User updatedUser = redisUser.updateFrom(other);
 				jedis.set(redisId, JSON.encode(updatedUser));
-
+				if(POSTGRE)
+				return errorOrResult(validatedUserOrError(DB.getOne(userId, User.class), pwd),
+						user -> DB.updateOne(updatedUser ));
 				return errorOrResult(validatedUserOrError(CosmosDB.getOne(userId, User.class, "user"), pwd),
 						user -> CosmosDB.updateOne(updatedUser, "user"));
 			}
 		}
-
+		if(POSTGRE)
+		return errorOrResult(validatedUserOrError(DB.getOne(userId, User.class), pwd),
+						user ->DB.updateOne(user.updateFrom(other)));
 		return errorOrResult(validatedUserOrError(CosmosDB.getOne(userId, User.class, "user"), pwd),
 				user -> CosmosDB.updateOne(user.updateFrom(other), "user"));
 	}
@@ -134,7 +143,17 @@ public class JavaUsers implements Users {
 
 		if (userId == null || pwd == null)
 			return error(BAD_REQUEST);
+			if(POSTGRE)
+			return errorOrResult( validatedUserOrError(DB.getOne( userId, User.class), pwd), user -> {
 
+				// Delete user shorts and related info asynchronously in a separate thread
+				Executors.defaultThreadFactory().newThread( () -> {
+					JavaShorts.getInstance().deleteAllShorts(userId, pwd, Token.get(userId));
+					JavaBlobs.getInstance().deleteAllBlobs(userId, Token.get(userId));
+				}).start();
+				
+				return DB.deleteOne( user);
+			});
 		return errorOrResult(validatedUserOrError(CosmosDB.getOne(userId, User.class, "user"), pwd), user -> {
 
 			// Delete user shorts and related info asynchronously in a separate thread
@@ -175,6 +194,15 @@ public class JavaUsers implements Users {
 	@Override
 	public Result<List<User>> searchUsers(String pattern) {
 		Log.info(() -> format("searchUsers : patterns = %s\n", pattern));
+		if(POSTGRE){
+			var query = format("SELECT * FROM PostgreUser u WHERE UPPER(u.userId) LIKE '%%%s%%'", pattern.toUpperCase());
+			var hits = DB.sql(query, User.class)
+				.stream()
+				.map(User::copyWithoutPassword)
+				.toList();
+
+		return ok(hits);
+	}
 		var query = format("SELECT * FROM User u WHERE UPPER(u.id) LIKE '%%%s%%'", pattern.toUpperCase());
 		var hits = CosmosDB.query(query, User.class, "user")
 				.value()

@@ -12,6 +12,7 @@ import jakarta.ws.rs.core.Application;
 import tukano.impl.Token;
 import utils.Args;
 import utils.IP;
+import utils.Props;
 
 
 public class TukanoRestServer extends Application{
@@ -40,7 +41,7 @@ public class TukanoRestServer extends Application{
 	}
 
 
-	/**public void start() throws Exception {
+	public void start() throws Exception {
 	
 		ResourceConfig config = new ResourceConfig();
 		
@@ -51,7 +52,7 @@ public class TukanoRestServer extends Application{
 		JdkHttpServerFactory.createHttpServer( URI.create(serverURI.replace(IP.hostname(), INETADDR_ANY)), config);
 		
 		Log.info(String.format("Tukano Server ready @ %s\n",  serverURI));
-	}**/
+	}
 	
 	@Override
 	public Set<Class<?>> getClasses() {
@@ -67,9 +68,9 @@ public class TukanoRestServer extends Application{
 		//Args.use(args);
 		Token.setSecret( Args.valueOf("-secret", "Secret"));
 		
-//		Props.load(azurekeys-region.props);
+		Props.load("azurekeys-region.props");
 		
-		//new TukanoRestServer().start();
+		new TukanoRestServer().start();
 		return;
 	}
 }

@@ -158,6 +158,11 @@
             <scope>provided</scope>
         </dependency>
 		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.2.24</version> 
+		</dependency>
+		<dependency>
     		<groupId>redis.clients</groupId>
     		<artifactId>jedis</artifactId>
     		<version>5.0.1</version>

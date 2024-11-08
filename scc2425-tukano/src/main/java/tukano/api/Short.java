@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import tukano.impl.Token;
 
 /**
@@ -16,6 +17,7 @@ import tukano.impl.Token;
  *
  */
 @Entity
+@Table(name="PostgreShort")
 public class Short {
 	
 	@Id
