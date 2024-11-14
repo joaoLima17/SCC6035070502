@@ -60,7 +60,7 @@ public class JavaShorts implements Shorts {
 
 			try (Jedis jedis = RedisCache.getCachePool().getResource()) {
 
-				var redisId = "shorts: " + shortId;
+				/*var redisId = "shorts: " + shortId;
 				if (jedis.exists(redisId)) {
 					return Result.error(FORBIDDEN);
 				}
@@ -69,18 +69,18 @@ public class JavaShorts implements Shorts {
 
 				var userJSON = JSON.encode(user);
 				t.set(redisId, userJSON);
-				t.expire(redisId, EXPIRATION_TIME);
+				t.expire(redisId, EXPIRATION_TIME);*/
 				if(POSTGRE)
 				return errorOrValue(DB.insertOne(shrt), s -> s.copyWithLikes_And_Token(0));
 				Result<Short> result = errorOrValue(CosmosDB.insertOne(shrt, "shorts"),
 						s -> s.copyWithLikes_And_Token(0));
 
-				if (result.isOK()){
+				/*if (result.isOK()){
 					//errorOrValue(DB.insertOne(shrt), s -> s.copyWithLikes_And_Token(0));
 					t.exec();
 				}
 				else
-					t.discard();
+					t.discard();*/
 
 				return result;
 			}
@@ -121,13 +121,13 @@ public class JavaShorts implements Shorts {
 			  });
 			 });
 			}
-			try (Jedis jedis = RedisCache.getCachePool().getResource()) {
+			/*try (Jedis jedis = RedisCache.getCachePool().getResource()) {
 
 				String redisId = "shorts: " + shortId;
 
 				if (jedis.exists(redisId))
 					jedis.del(redisId);
-			}
+			}*/
 			CosmosDB.deleteOne(shrt, "shorts");
 
 			return JavaBlobs.getInstance().delete(shortId, Token.get(shortId));

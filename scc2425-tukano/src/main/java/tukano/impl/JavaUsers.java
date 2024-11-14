@@ -53,13 +53,13 @@ public class JavaUsers implements Users {
 
 		try (Jedis jedis = RedisCache.getCachePool().getResource()) {
 
-			if (jedis.exists(redisId)) {
+			/*if (jedis.exists(redisId)) {
 				jedis.del(redisId);
 			}
 
 			var userJSON = JSON.encode(user);
 			jedis.set(redisId, userJSON);
-			jedis.expire(redisId, EXPIRATION_TIME);
+			jedis.expire(redisId, EXPIRATION_TIME);*/
 			if(POSTGRE)
 			return errorOrValue( DB.insertOne( user), user.getUserId() );
 			return errorOrValue(CosmosDB.insertOne(user, "user"), userId);
@@ -79,7 +79,7 @@ public class JavaUsers implements Users {
 			
 			String user = jedis.get(redisId);
 			if (user != null) {
-				return validatedUserOrError(ok(JSON.decode(user, User.class)), pwd);
+				/*return validatedUserOrError(ok(JSON.decode(user, User.class)), pwd);*/
 			}
 			Result<User> res;
 			if(POSTGRE)
@@ -88,9 +88,9 @@ public class JavaUsers implements Users {
 				res = CosmosDB.getOne(userId, User.class, "user");
 			Result<User> result = validatedUserOrError(res, pwd);
 			if (result.isOK()) {
-				var userJSON = JSON.encode(result.value());
-				jedis.set(redisId, userJSON);
-				jedis.expire(redisId, EXPIRATION_TIME);
+				//var userJSON = JSON.encode(result.value());
+				//jedis.set(redisId, userJSON);
+				//jedis.expire(redisId, EXPIRATION_TIME);
 				return result;
 			} else {
 				return error(result.error());
@@ -109,30 +109,30 @@ public class JavaUsers implements Users {
 
 			String redisId = "users: " + userId;
 
-			String redis = jedis.get(redisId);
+			//String redis = jedis.get(redisId);
 
-			if (redis != null) {
+			//if (redis != null) {
 
-				Result<User> validated = validatedUserOrError(ok(JSON.decode(redis, User.class)), pwd);
+				//Result<User> validated = validatedUserOrError(ok(JSON.decode(redis, User.class)), pwd);
 
-				if (!validated.isOK())
-					return error(FORBIDDEN);
+				//if (!validated.isOK())
+				//	return error(FORBIDDEN);
 
-				User redisUser = JSON.decode(redis, User.class);
-				jedis.del(redisId);
+				//User redisUser = JSON.decode(redis, User.class);
+				//jedis.del(redisId);
 
-				User updatedUser = redisUser.updateFrom(other);
-				jedis.set(redisId, JSON.encode(updatedUser));
-				if(POSTGRE)
-				return errorOrResult(validatedUserOrError(DB.getOne(userId, User.class), pwd),
-						user -> DB.updateOne(updatedUser ));
-				return errorOrResult(validatedUserOrError(CosmosDB.getOne(userId, User.class, "user"), pwd),
-						user -> CosmosDB.updateOne(updatedUser, "user"));
-			}
+				//User updatedUser = redisUser.updateFrom(other);
+				//jedis.set(redisId, JSON.encode(updatedUser));
+				//if(POSTGRE)
+				//return errorOrResult(validatedUserOrError(DB.getOne(userId, User.class), pwd),
+				//		user -> DB.updateOne(updatedUser ));
+				//return errorOrResult(validatedUserOrError(CosmosDB.getOne(userId, User.class, "user"), pwd),
+				//		user -> CosmosDB.updateOne(updatedUser, "user"));
+			//}
 		}
-		if(POSTGRE)
-		return errorOrResult(validatedUserOrError(DB.getOne(userId, User.class), pwd),
-						user ->DB.updateOne(user.updateFrom(other)));
+		//if(POSTGRE)
+		//return errorOrResult(validatedUserOrError(DB.getOne(userId, User.class), pwd),
+				//		user ->DB.updateOne(user.updateFrom(other)));
 		return errorOrResult(validatedUserOrError(CosmosDB.getOne(userId, User.class, "user"), pwd),
 				user -> CosmosDB.updateOne(user.updateFrom(other), "user"));
 	}
@@ -176,7 +176,7 @@ public class JavaUsers implements Users {
 				JavaBlobs.getInstance().deleteAllBlobs(userId, Token.get(userId));
 
 
-				try (Jedis jedis = RedisCache.getCachePool().getResource()) {
+				/*try (Jedis jedis = RedisCache.getCachePool().getResource()) {
 
 					String redisId = "users: " + userId;
 					String redis = jedis.get(redisId);
@@ -184,7 +184,7 @@ public class JavaUsers implements Users {
 					if (redis != null && validatedUserOrError(ok(JSON.decode(redis, User.class)), pwd).isOK()) {
 						jedis.del(redisId);
 					}
-				}
+				}*/
 			}).start();
 
 			return CosmosDB.deleteOne(user, "user");
