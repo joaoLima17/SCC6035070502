@@ -70,7 +70,8 @@ public class JavaShorts implements Shorts {
 				t.set(redisId, userJSON);
 				t.expire(redisId, EXPIRATION_TIME);*/
 				if(POSTGRE)
-				return errorOrValue(DB.insertOne(shrt), s -> s.copyWithLikes_And_Token(0));
+					return errorOrValue(DB.insertOne(shrt), s -> s.copyWithLikes_And_Token(0));
+					
 				Result<Short> result = errorOrValue(CosmosDB.insertOne(shrt, "shorts"),
 						s -> s.copyWithLikes_And_Token(0));
 

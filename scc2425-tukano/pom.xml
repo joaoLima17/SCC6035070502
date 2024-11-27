@@ -25,9 +25,9 @@
 				<version>2.13.0</version>
 			    <configuration>
 			        <schemaVersion>v2</schemaVersion>
-			        <resourceGroup>tukano-1729891746016-rg</resourceGroup>
-			        <appName>tukano-1729891746016</appName>
-			        <pricingTier>B1</pricingTier>
+			        <resourceGroup>scc-backend-tukano-70502-rg</resourceGroup>
+			        <appName>scc-backend-tukano-70502</appName>
+			        <pricingTier>F1</pricingTier>
 			        <region>westeurope</region>
 			        <runtime>
 			            <os>Linux</os>

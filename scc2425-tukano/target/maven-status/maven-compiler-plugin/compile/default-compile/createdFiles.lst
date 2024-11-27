@@ -40,6 +40,7 @@ tukano\api\UserDAO.class
 utils\Queues.class
 tukano\api\rest\RestShorts.class
 tukano\api\Result$ErrorCode.class
+tukano\api\auth\RequestCookiesFilter.class
 test\TestCache.class
 tukano\clients\rest\RestUsersClient$1.class
 tukano\api\ShortDAO.class
@@ -56,10 +57,14 @@ tukano\api\ErrorResult.class
 tukano\clients\rest\RestBlobsClient.class
 utils\TryCatch$ThrowableSupplier.class
 tukano\clients\rest\RestShortsClient$1.class
+tukano\api\auth\RequestCookiesCleanupFilter.class
+tukano\api\Authentication.class
 utils\JSON.class
 tukano\clients\rest\RestShortsClient$4.class
 tukano\api\Short.class
 db\CosmosDBLayer.class
+tukano\api\Session.class
+tukano\api\auth\RequestCookies.class
 tukano\impl\rest\RestShortsResource.class
 tukano\impl\rest\RestUsersResource.class
 utils\Hash.class
