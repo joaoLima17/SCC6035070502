@@ -15,10 +15,13 @@ import com.azure.cosmos.models.CosmosQueryRequestOptions;
 import com.azure.cosmos.models.PartitionKey;
 import tukano.api.Result;
 import tukano.api.Result.ErrorCode;
-import tukano.impl.JavaBlobs;
-
+import tukano.api.Session;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class CosmosDBLayer {
+
+	
 	private static Logger Log = Logger.getLogger(CosmosDBLayer.class.getName());
 	private static final String CONNECTION_URL = "https://scc60350.documents.azure.com:443/"; // replace with your own
 	private static final String DB_KEY = "RaSUWAOvvbWuL4LVXHEQGjeLSrZig4rgXH9FZD1YxSGDGbW4oIGVvUymjJSjRiLFaoCZjQyXb0tHACDbTLQFlQ==";
@@ -26,7 +29,7 @@ public class CosmosDBLayer {
 	private static final String USERS_CONTAINER = "users";
 	private static final String FOLLOWS_CONTAINER = "follows";
 	private static final String LIKES_CONTAINER = "likes";
-	
+	Map<String, Session> sessions = new ConcurrentHashMap<>();
 	
 	private static CosmosDBLayer instance;
 
@@ -46,7 +49,13 @@ public class CosmosDBLayer {
 		instance = new CosmosDBLayer( client);
 		return instance;
 	}
+	public void putSession(Session s) {
+		sessions.put(s.uid(), s);
+	}
 	
+	public Session getSession(String uid) {
+		return sessions.get(uid);
+	}
 	private CosmosClient client;
 	private CosmosDatabase db;
 	private CosmosContainer users_container;

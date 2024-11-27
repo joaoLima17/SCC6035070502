@@ -26,7 +26,7 @@ public class AzureStorage implements BlobStorage {
 	private static final int CHUNK_SIZE = 4096;
 
 	private static final String BLOBS_CONTAINER_NAME = "images";
-	String storageConnectionString = "DefaultEndpointsProtocol=https;AccountName=scc60350;AccountKey=PFFsaRsGU1GopDIjf1LAaFESIhI3emOS7/NHsfsAf1+KKOTqwqrNqRpv3mjkCof8+GQWU3xt4o6k+AStgeXKjA==;EndpointSuffix=core.windows.net";
+	String storageConnectionString = "DefaultEndpointsProtocol=https;AccountName=scc70502;AccountKey=QaKYMH7zSblenT+ALAqyiyuzNBXQ03OEuv9Kv1C9J/z3WQcTj7wZqYbFlGsHbc2pqCtUo/oNLD+G+ASth1fEzA==;EndpointSuffix=core.windows.net";
 	private static BlobContainerClient containerClient;
 
 	public AzureStorage() {

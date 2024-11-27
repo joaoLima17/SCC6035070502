@@ -21,12 +21,12 @@ import tukano.api.User;
 import tukano.api.Users;
 import utils.CosmosDB;
 import utils.DB;
-import utils.JSON;
+
 
 public class JavaUsers implements Users {
 
 	private static final int EXPIRATION_TIME = 60 * 60; // 1 hour
-	private static final boolean POSTGRE = false;
+	private static final boolean POSTGRE = true;
 	private static Logger Log = Logger.getLogger(JavaUsers.class.getName());
 
 	private static Users instance;
@@ -62,6 +62,7 @@ public class JavaUsers implements Users {
 			jedis.expire(redisId, EXPIRATION_TIME);*/
 			if(POSTGRE)
 			return errorOrValue( DB.insertOne( user), user.getUserId() );
+			else
 			return errorOrValue(CosmosDB.insertOne(user, "user"), userId);
 		}
 	}

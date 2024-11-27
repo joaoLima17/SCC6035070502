@@ -2,7 +2,7 @@
 <hibernate-configuration>
 	<session-factory>
 		<property name="connection.driver_class">org.postgresql.Driver</property>
-		<property name="connection.url">jdbc:postgresql://c-scc603502425.2us6ry5d7urlin.postgres.cosmos.azure.com:5432/citus?user=citus&amp;password=PostgreSQL2425&amp;sslmode=require</property>
+		<property name="connection.url">jdbc:postgresql://c-scc603502425.35kmjmj3jzww6n.postgres.cosmos.azure.com:5432/citus?user=citus&amp;password=PostgreSQL2425&amp;sslmode=require</property>
 		<property name="connection.username">citus</property>
 		<property name="connection.password">PostgreSQL2425</property>
 		<property name="connection.sslmode">require</property>

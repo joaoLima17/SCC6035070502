@@ -3,9 +3,10 @@ package tukano.api;
 import java.net.URI;
 import java.util.UUID;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response.Status;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response.Status;
 
+import db.CosmosDBLayer;
 import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.NotAuthorizedException;
@@ -16,7 +17,7 @@ import jakarta.ws.rs.core.Cookie;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.NewCookie;
 import jakarta.ws.rs.core.Response;
-import scc.srv.auth.RequestCookies;
+import tukano.api.auth.RequestCookies;
 
 @Path(Authentication.PATH)
 public class Authentication {
@@ -42,7 +43,7 @@ public class Authentication {
 					.httpOnly(true)
 					.build();
 			
-			FakeRedisLayer.getInstance().putSession( new Session( uid, user));	
+			CosmosDBLayer.getInstance().putSession( new Session( uid, user));	
 			
             return Response.seeOther(URI.create( REDIRECT_TO_AFTER_LOGIN ))
                     .cookie(cookie) 
@@ -73,7 +74,7 @@ public class Authentication {
 		if (cookie == null )
 			throw new NotAuthorizedException("No session initialized");
 		
-		var session = FakeRedisLayer.getInstance().getSession( cookie.getValue());
+		var session = CosmosDBLayer.getInstance().getSession( cookie.getValue());
 		if( session == null )
 			throw new NotAuthorizedException("No valid session initialized");
 			

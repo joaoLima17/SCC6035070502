@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 
 import cache.RedisCache;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.Transaction;
 import tukano.api.Blobs;
 import tukano.api.Result;
 import tukano.api.Short;
@@ -30,13 +29,13 @@ import tukano.impl.data.Likes;
 import tukano.impl.rest.TukanoRestServer;
 import utils.CosmosDB;
 import utils.DB;
-import utils.JSON;
+
 
 public class JavaShorts implements Shorts {
 
 	private static Logger Log = Logger.getLogger(JavaShorts.class.getName());
 	private static final int EXPIRATION_TIME = 60 * 60; // 1 hour
-	private static final boolean POSTGRE = false;
+	private static final boolean POSTGRE = true;
 	private static Shorts instance;
 
 	synchronized public static Shorts getInstance() {
