@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 import cache.RedisCache;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.Transaction;
 import tukano.api.Blobs;
 import tukano.api.Result;
 import tukano.api.Short;
@@ -29,7 +30,7 @@ import tukano.impl.data.Likes;
 import tukano.impl.rest.TukanoRestServer;
 import utils.CosmosDB;
 import utils.DB;
-
+import utils.JSON;
 
 public class JavaShorts implements Shorts {
 
@@ -59,7 +60,7 @@ public class JavaShorts implements Shorts {
 
 			try (Jedis jedis = RedisCache.getCachePool().getResource()) {
 
-				/*var redisId = "shorts: " + shortId;
+				var redisId = "shorts: " + shortId;
 				if (jedis.exists(redisId)) {
 					return Result.error(FORBIDDEN);
 				}
@@ -68,20 +69,21 @@ public class JavaShorts implements Shorts {
 
 				var userJSON = JSON.encode(user);
 				t.set(redisId, userJSON);
-				t.expire(redisId, EXPIRATION_TIME);*/
-				if(POSTGRE)
+				t.expire(redisId, EXPIRATION_TIME);
+				if (POSTGRE)
 					return errorOrValue(DB.insertOne(shrt), s -> s.copyWithLikes_And_Token(0));
-					
+
 				Result<Short> result = errorOrValue(CosmosDB.insertOne(shrt, "shorts"),
 						s -> s.copyWithLikes_And_Token(0));
 
-				/*if (result.isOK()){
-					//errorOrValue(DB.insertOne(shrt), s -> s.copyWithLikes_And_Token(0));
-					t.exec();
-				}
-				else
-					t.discard();*/
-
+				/*
+				 * if (result.isOK()){
+				 * errorOrValue(DB.insertOne(shrt), s -> s.copyWithLikes_And_Token(0));
+				 * t.exec();
+				 * }
+				 * else
+				 * t.discard();
+				 */
 				return result;
 			}
 		});
@@ -93,10 +95,11 @@ public class JavaShorts implements Shorts {
 
 		if (shortId == null)
 			return error(BAD_REQUEST);
-			if(POSTGRE){
-		var query = format("SELECT count(*) FROM PostgreLikes l WHERE l.shortId = '%s'", shortId);
-		var likes = DB.sql(query, Long.class);
-		return errorOrValue( DB.getOne(shortId, Short.class), shrt -> shrt.copyWithLikes_And_Token( likes.get(0)));}
+		if (POSTGRE) {
+			var query = format("SELECT count(*) FROM PostgreLikes l WHERE l.shortId = '%s'", shortId);
+			var likes = DB.sql(query, Long.class);
+			return errorOrValue(DB.getOne(shortId, Short.class), shrt -> shrt.copyWithLikes_And_Token(likes.get(0)));
+		}
 		var query = format("SELECT VALUE COUNT(1) FROM Likes l WHERE l.shortId = '%s'", shortId);
 		var likes = CosmosDB.query(query, Long.class, "shorts").value().toList();
 		return errorOrValue(getOne(shortId, Short.class, "shorts"), shrt -> shrt.copyWithLikes_And_Token(likes.get(0)));
@@ -107,27 +110,27 @@ public class JavaShorts implements Shorts {
 		Log.info(() -> format("deleteShort : shortId = %s, pwd = %s\n", shortId, password));
 
 		return errorOrResult(getShort(shortId), shrt -> {
-			if(POSTGRE){
-			  return errorOrResult( okUser( shrt.getOwnerId(), password), user -> {
-			  
-			  return DB.transaction( hibernate -> {
-			  
-			  hibernate.remove( shrt);
-			  
-			  var query = format("DELETE PostgreLikes l WHERE l.shortId = '%s'", shortId);
-			 hibernate.createNativeQuery( query, Likes.class).executeUpdate();
-			  
-			  JavaBlobs.getInstance().delete(shrt.getBlobUrl(), Token.get() );
-			  });
-			 });
+			if (POSTGRE) {
+				return errorOrResult(okUser(shrt.getOwnerId(), password), user -> {
+
+					return DB.transaction(hibernate -> {
+
+						hibernate.remove(shrt);
+
+						var query = format("DELETE FROM PostgreLikes l WHERE l.shortId = '%s'", shortId);
+						hibernate.createNativeQuery(query, Likes.class).executeUpdate();
+
+						JavaBlobs.getInstance().delete(shrt.getBlobUrl(), Token.get());
+					});
+				});
 			}
-			/*try (Jedis jedis = RedisCache.getCachePool().getResource()) {
+			try (Jedis jedis = RedisCache.getCachePool().getResource()) {
 
 				String redisId = "shorts: " + shortId;
 
 				if (jedis.exists(redisId))
 					jedis.del(redisId);
-			}*/
+			}
 			CosmosDB.deleteOne(shrt, "shorts");
 
 			return JavaBlobs.getInstance().delete(shortId, Token.get(shortId));
@@ -137,15 +140,15 @@ public class JavaShorts implements Shorts {
 	@Override
 	public Result<List<String>> getShorts(String userId) {
 		Log.info(() -> format("getShorts : userId = %s\n", userId));
-		if(POSTGRE){
-		var query = format("SELECT s.shortId FROM PostgreShort s WHERE s.ownerId = '%s'", userId);
-		return errorOrValue( okUser(userId), DB.sql( query, String.class));
-	}
+		if (POSTGRE) {
+			var query = format("SELECT s.shortId FROM PostgreShort s WHERE s.ownerId = '%s'", userId);
+			return errorOrValue(okUser(userId), DB.sql(query, String.class));
+		}
 		var query = format("SELECT * FROM Short s WHERE s.ownerId = '%s'", userId);
 		List<Short> shorts = CosmosDB.query(query, Short.class, "shorts").value().toList();
 
 		List<String> ids = shorts.stream()
-				.map(Short::getShortId) 
+				.map(Short::getShortId)
 				.collect(Collectors.toList());
 
 		return errorOrValue(okUser(userId), ids);
@@ -158,8 +161,8 @@ public class JavaShorts implements Shorts {
 
 		return errorOrResult(okUser(userId1, password), user -> {
 			var f = new Following(userId2, userId1);
-			if(POSTGRE)
-				return errorOrVoid( okUser( userId2), isFollowing ? DB.insertOne( f ) : DB.deleteOne( f ));
+			if (POSTGRE)
+				return errorOrVoid(okUser(userId2), isFollowing ? DB.insertOne(f) : DB.deleteOne(f));
 			var query = format("SELECT * FROM Following f WHERE f.id = '%s'", userId1 + '|' + userId2);
 
 			var s = CosmosDB.query(query, Following.class, "follow").value().toList();
@@ -174,9 +177,10 @@ public class JavaShorts implements Shorts {
 	@Override
 	public Result<List<String>> followers(String userId, String password) {
 		Log.info(() -> format("followers : userId = %s, pwd = %s\n", userId, password));
-		if(POSTGRE){
-		var query = format("SELECT f.follower FROM PostgreFollowing f WHERE f.followee = '%s'", userId);		
-		return errorOrValue( okUser(userId, password), DB.sql(query, String.class));}
+		if (POSTGRE) {
+			var query = format("SELECT f.follower FROM PostgreFollowing f WHERE f.followee = '%s'", userId);
+			return errorOrValue(okUser(userId, password), DB.sql(query, String.class));
+		}
 		var query = format("SELECT VALUE f.follower FROM Following f WHERE f.followee = '%s'", userId);
 		return errorOrValue(okUser(userId, password), CosmosDB.query(query, String.class, "follow").value().toList());
 	}
@@ -188,9 +192,10 @@ public class JavaShorts implements Shorts {
 
 		return errorOrResult(getShort(shortId), shrt -> {
 			var l = new Likes(userId, shortId, shrt.getOwnerId());
-			if(POSTGRE)
-			return errorOrVoid( okUser( userId, password), isLiked ? DB.insertOne( l ) : DB.deleteOne( l ));
-			return errorOrVoid(okUser(userId, password),isLiked ? CosmosDB.insertOne(l, "like") : CosmosDB.deleteOne(l, "like"));
+			if (POSTGRE)
+				return errorOrVoid(okUser(userId, password), isLiked ? DB.insertOne(l) : DB.deleteOne(l));
+			return errorOrVoid(okUser(userId, password),
+					isLiked ? CosmosDB.insertOne(l, "like") : CosmosDB.deleteOne(l, "like"));
 		});
 	}
 
@@ -199,9 +204,10 @@ public class JavaShorts implements Shorts {
 		Log.info(() -> format("likes : shortId = %s, pwd = %s\n", shortId, password));
 
 		return errorOrResult(getShort(shortId), shrt -> {
-			if(POSTGRE){
-			var query = format("SELECT l.userId FROM PostgreLikes l WHERE l.shortId = '%s'", shortId);					
-			return errorOrValue( okUser( shrt.getOwnerId(), password ), DB.sql(query, String.class));}
+			if (POSTGRE) {
+				var query = format("SELECT l.userId FROM PostgreLikes l WHERE l.shortId = '%s'", shortId);
+				return errorOrValue(okUser(shrt.getOwnerId(), password), DB.sql(query, String.class));
+			}
 			var query = format("SELECT VALUE l.userId FROM Likes l WHERE l.shortId = '%s'", shortId);
 
 			return errorOrValue(okUser(shrt.getOwnerId(), password),
@@ -210,18 +216,18 @@ public class JavaShorts implements Shorts {
 	}
 
 	@Override
- 	public Result<List<String>> getFeed(String userId, String password) {
+	public Result<List<String>> getFeed(String userId, String password) {
 		Log.info(() -> format("getFeed : userId = %s, pwd = %s\n", userId, password));
-		if(POSTGRE){
-		final var QUERY_FMT = """
-				SELECT s.shortId, s.timestamp FROM PostgreShort s WHERE	s.ownerId = '%s'				
-				UNION			
-				SELECT s.shortId, s.timestamp FROM PostgreShort s, PostgreFollowing f 
-					WHERE 
-						f.followee = s.ownerId AND f.follower = '%s' 
-				ORDER BY s.timestamp DESC""";
+		if (POSTGRE) {
+			final var QUERY_FMT = """
+					SELECT s.shortId, s.timestamp FROM PostgreShort s WHERE s.ownerId = '%s'
+					UNION
+					SELECT ps.shortId, ps.timestamp FROM PostgreShort ps
+					JOIN PostgreFollowing f ON f.followee = ps.ownerId WHERE f.follower = '%s'
+					ORDER BY timestamp DESC
+					""";
 
-		return errorOrValue( okUser( userId, password), DB.sql( format(QUERY_FMT, userId, userId), String.class));
+			return errorOrValue(okUser(userId, password), DB.sql(format(QUERY_FMT, userId, userId), String.class));
 		}
 		var r = okUser(userId, password);
 		if (!r.isOK())
@@ -233,16 +239,16 @@ public class JavaShorts implements Shorts {
 		for (String id : followeeIds) {
 			var query2 = String.format("SELECT * FROM Short s WHERE s.ownerId = '%s'", id);
 			List<Short> followeeShorts = CosmosDB.query(query2, Short.class, "shorts").value().toList();
-			
+
 			shortList.addAll(followeeShorts);
 		}
-		
-		shortList.sort(Comparator.comparing(Short::getTimestamp).reversed());		
+
+		shortList.sort(Comparator.comparing(Short::getTimestamp).reversed());
 
 		List<String> sortedFeed = shortList.stream()
-				.map(Short::getShortId) 
+				.map(Short::getShortId)
 				.collect(Collectors.toList());
-		
+
 		return ok(sortedFeed);
 	}
 
@@ -265,23 +271,25 @@ public class JavaShorts implements Shorts {
 
 		if (!Token.isValid(token, userId))
 			return error(FORBIDDEN);
-			if(POSTGRE)
-			return DB.transaction( (hibernate) -> {
-						
-				//delete shorts
-				var query1 = format("DELETE PostgreShort s WHERE s.ownerId = '%s'", userId);		
-				hibernate.createQuery(query1, Short.class).executeUpdate();
-				
-				//delete follows
-				var query2 = format("DELETE PostgreFollowing f WHERE f.follower = '%s' OR f.followee = '%s'", userId, userId);		
-				hibernate.createQuery(query2, Following.class).executeUpdate();
-				
-				//delete likes
-				var query3 = format("DELETE PostgreLikes l WHERE l.ownerId = '%s' OR l.userId = '%s'", userId, userId);		
-				hibernate.createQuery(query3, Likes.class).executeUpdate();
-				
+		if (POSTGRE)
+			return DB.transaction((hibernate) -> {
+
+				// delete shorts
+				var query1 = format("DELETE FROM PostgreShort s WHERE s.ownerId = '%s'", userId);
+				hibernate.createNativeQuery(query1, Short.class).executeUpdate();
+
+				// delete follows
+				var query2 = format("DELETE FROM PostgreFollowing f WHERE f.follower = '%s' OR f.followee = '%s'",
+						userId, userId);
+				hibernate.createNativeQuery(query2, Following.class).executeUpdate();
+
+				// delete likes
+				var query3 = format("DELETE FROM PostgreLikes l WHERE l.ownerId = '%s' OR l.userId = '%s'", userId,
+						userId);
+				hibernate.createNativeQuery(query3, Likes.class).executeUpdate();
+
 			});
-		deleteAllLikes( userId,  password);
+		deleteAllLikes(userId, password);
 		deleteAllFollows(userId, password);
 		List<String> shorts = getShorts(userId).value();
 
@@ -323,12 +331,12 @@ public class JavaShorts implements Shorts {
 		for (Following f : followers) {
 			follow(userId, f.getFollowee(), false, password);
 		}
-		
+
 		for (Following f : followees) {
 			CosmosDB.deleteOne(f, "follow");
 		}
-		
+
 		return Result.ok();
 	}
-	
+
 }
