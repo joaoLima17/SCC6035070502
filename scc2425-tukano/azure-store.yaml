@@ -1,84 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres
-  labels:
-    app: postgres
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: postgres
-  template:
-    metadata:
-      labels:
-        app: postgres
-    spec:
-      containers:
-      - name: postgres
-        image: postgres:15-alpine
-        ports:
-        - containerPort: 5432
-        env:
-        - name: POSTGRES_USER
-          value: tukano_user
-        - name: POSTGRES_PASSWORD
-          value: secure_password
-        - name: POSTGRES_DB
-          value: tukano_db
-        - name: PGDATA
-          value: /var/lib/postgresql/data/db
-        volumeMounts:
-        - name: postgres-data
-          mountPath: /var/lib/postgresql/data/db
-      volumes:
-      - name: postgres-data
-        persistentVolumeClaim:
-          claimName: azure-managed-disk
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: azure-managed-disk
-spec:
-  capacity:
-    storage: 20Gi
-  accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  azureDisk:
-    diskName: media-disk
-    diskURI: /subscriptions/163dc8bc-3ddf-4635-b1e1-bd95107778f7/resourceGroups/scc2425-container-70502/providers/Microsoft.Compute/disks/media-disk
-    cachingMode: ReadWrite
-    kind: Managed
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: azure-managed-disk
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 20Gi
-  volumeName: azure-managed-disk
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: postgres
-spec:
-  ports:
-    - port: 5432
-      targetPort: 5432
-  selector:
-    app: postgres
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
   name: tukano-app
   labels:
     app: tukano-app
@@ -113,7 +35,9 @@ spec:
           limits:
             memory: "512Mi"
             cpu: "250m"
+
 ---
+
 apiVersion: v1
 kind: Service
 metadata:

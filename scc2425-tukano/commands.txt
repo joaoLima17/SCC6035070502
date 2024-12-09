@@ -1,0 +1,28 @@
+docker run -ti --net=host smduarte/tomcat10
+
+mvn clean compile package tomcat7:redeploy
+
+docker build -t diogodi/scc2425-webapp .
+
+docker push diogodi/scc2425-webapp
+
+docker run -it --rm -p 8080 diogodi/scc2425-webapp
+
+az group create --name scc2425-container-practice --location northeurope
+
+az container create --resource-group scc2425-container-practice --name scc2425-webapp-container --image diogodi/scc2425-webapp --ports 8080 --dns-name-label scc2425-diogodi-webapp --ports 8080 --dns-name-label scc2425-diogodi-webapp --registry-username diogodi --registry-password jackanddexter99 --registry-login-server index.docker.io
+
+az ad sp create-for-rbac --name http://diogodi-scc2425-kuber --role Contributor --scope /subscriptions/163dc8bc-3ddf-4635-b1e1-bd95107778f7
+
+az aks create --resource-group scc2425-cluster-rg-diogodi --name my-scc2425-cluster-diogodi --node-vm-size Standard_B2s --generate-ssh-keys --node-count 2 --service-principal <appId_REPLACE> --client-secret <password_REPLACE>
+
+kubectl apply -f azure-store.yaml
+
+kubectl delete deployments,services,pods --all
+
+kubectl delete pv --all
+
+kubectl describe pod pod_name
+
+az group delete --resource-group <rg-name>
+
