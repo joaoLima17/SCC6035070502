@@ -1,28 +1,23 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: azure-managed-disk
+  name: minikube-hostpath-pv
 spec:
   capacity:
     storage: 1Gi
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  azureDisk:
-    diskName: media-disk
-    diskURI: /subscriptions/163dc8bc-3ddf-4635-b1e1-bd95107778f7/resourceGroups/scc-container-70502/providers/Microsoft.Compute/disks/media-disk
-    cachingMode: ReadWrite
-    kind: Managed
+  hostPath:
+    path: "/mnt/data"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: azure-managed-disk
+  name: minikube-hostpath-pvc
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
-  volumeName: azure-managed-disk
-

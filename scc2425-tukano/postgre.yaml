@@ -34,7 +34,7 @@ spec:
       volumes:
       - name: postgres-data
         persistentVolumeClaim:
-          claimName: azure-managed-disk
+          claimName: minikube-hostpath-pvc
 ---
 
 apiVersion: v1
