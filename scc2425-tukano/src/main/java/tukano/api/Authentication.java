@@ -3,10 +3,10 @@ package tukano.api;
 import java.net.URI;
 import java.util.UUID;
 
+
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response.Status;
 
-import db.CosmosDBLayer;
 import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.NotAuthorizedException;
@@ -18,6 +18,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.NewCookie;
 import jakarta.ws.rs.core.Response;
 import tukano.api.auth.RequestCookies;
+import utils.Hibernate;
 
 @Path(Authentication.PATH)
 public class Authentication {
@@ -32,18 +33,18 @@ public class Authentication {
 	@POST
 	public Response login( @FormParam(USER) String user, @FormParam(PWD) String password ) {
 		System.out.println("user: " + user + " pwd:" + password );
-		boolean pwdOk = true; // replace with code to check user password
+		boolean pwdOk = true; 
 		if (pwdOk) {
 			String uid = UUID.randomUUID().toString();
 			var cookie = new NewCookie.Builder(COOKIE_KEY)
 					.value(uid).path("/")
 					.comment("sessionid")
 					.maxAge(MAX_COOKIE_AGE)
-					.secure(false) //ideally it should be true to only work for https requests
+					.secure(false) 
 					.httpOnly(true)
 					.build();
 			
-			CosmosDBLayer.getInstance().putSession( new Session( uid, user));	
+			Hibernate.getInstance().putSession( new Session2( uid, user));	
 			
             return Response.seeOther(URI.create( REDIRECT_TO_AFTER_LOGIN ))
                     .cookie(cookie) 
@@ -64,17 +65,17 @@ public class Authentication {
 		}
 	}
 	
-	static public Session validateSession(String userId) throws NotAuthorizedException {
+	static public Session2 validateSession(String userId) throws NotAuthorizedException {
 		var cookies = RequestCookies.get();
 		return validateSession( cookies.get(COOKIE_KEY ), userId );
 	}
 	
-	static public Session validateSession(Cookie cookie, String userId) throws NotAuthorizedException {
+	static public Session2 validateSession(Cookie cookie, String userId) throws NotAuthorizedException {
 
 		if (cookie == null )
 			throw new NotAuthorizedException("No session initialized");
 		
-		var session = CosmosDBLayer.getInstance().getSession( cookie.getValue());
+		var session = Hibernate.getInstance().getSession( cookie.getValue());
 		if( session == null )
 			throw new NotAuthorizedException("No valid session initialized");
 			

@@ -14,20 +14,13 @@ spec:
       labels:
         app: tukano-app
     spec:
+      nodeSelector:
+        "kubernetes.io/os": linux
       containers:
       - name: tukano-app
-        image: diogodi/scc2425-webapp:latest
+        image: jmll17/scc2425-webapp:latest
         ports:
-        - containerPort: 8080
-        env:
-        - name: SPRING_DATASOURCE_URL
-          value: jdbc:postgresql://localhost:5432/tukano_db
-        - name: SPRING_DATASOURCE_USERNAME
-          value: tukano_user
-        - name: SPRING_DATASOURCE_PASSWORD
-          value: secure_password
-        - name: SPRING_JPA_HIBERNATE_DDL_AUTO
-          value: update
+        - containerPort: 8080 
         resources:
           requests:
             memory: "256Mi"
@@ -45,9 +38,10 @@ metadata:
 spec:
   type: NodePort
   ports:
-    - port: 80
+    - name: http
+      port: 8080
       targetPort: 8080
-      nodePort: 30080  
+      nodePort: 30000  
   selector:
     app: tukano-app
 

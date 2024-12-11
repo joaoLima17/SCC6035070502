@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 
 import cache.RedisCache;
 import redis.clients.jedis.Jedis;
+import tukano.api.Authentication;
 import tukano.api.Result;
 import tukano.api.User;
 import tukano.api.Users;
@@ -218,9 +219,14 @@ public class JavaUsers implements Users {
 	}
 
 	private Result<User> validatedUserOrError(Result<User> res, String pwd) {
+		try {
+			Authentication.validateSession(res.value().userId());
+		} catch (Exception e) {
+			return error(BAD_REQUEST);
+		}
 		if (res.isOK())
 			return res.value().getPwd().equals(pwd) ? res : error(FORBIDDEN);
-		else
+		else 
 			return res;
 	}
 

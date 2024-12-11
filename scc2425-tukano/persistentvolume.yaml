@@ -9,7 +9,7 @@ spec:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
   hostPath:
-    path: "/mnt/data"
+    path: "/mnt/data/tukano"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

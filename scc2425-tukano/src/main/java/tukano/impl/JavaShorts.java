@@ -18,8 +18,10 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import cache.RedisCache;
+import jakarta.ws.rs.NotAuthorizedException;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Transaction;
+import tukano.api.Authentication;
 import tukano.api.Blobs;
 import tukano.api.Result;
 import tukano.api.Short;
@@ -253,10 +255,20 @@ public class JavaShorts implements Shorts {
 	}
 
 	protected Result<User> okUser(String userId, String pwd) {
+		try {
+			Authentication.validateSession(userId);
+		} catch (Exception e) {
+			return error(BAD_REQUEST);
+		}
 		return JavaUsers.getInstance().getUser(userId, pwd);
 	}
 
 	private Result<Void> okUser(String userId) {
+		try {
+			Authentication.validateSession(userId);
+		} catch (Exception e) {
+			return error(BAD_REQUEST);
+		}
 		var res = okUser(userId, "");
 		if (res.error() == FORBIDDEN)
 			return ok();

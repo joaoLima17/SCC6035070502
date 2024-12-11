@@ -2,7 +2,7 @@ docker run -ti --net=host smduarte/tomcat10
 
 mvn clean compile package tomcat7:redeploy
 
-docker build -t diogodi/scc2425-webapp .
+docker build -t jmll17/scc2425-webapp .
 
 docker push diogodi/scc2425-webapp
 
@@ -16,7 +16,9 @@ az ad sp create-for-rbac --name http://diogodi-scc2425-kuber --role Contributor 
 
 az aks create --resource-group scc2425-cluster-rg-diogodi --name my-scc2425-cluster-diogodi --node-vm-size Standard_B2s --generate-ssh-keys --node-count 2 --service-principal <appId_REPLACE> --client-secret <password_REPLACE>
 
-kubectl apply -f azure-store.yaml
+kubectl apply -f persistentvolume.yaml
+kubectl apply -f postgre.yaml
+kubectl apply -f tukano-app.yaml
 
 kubectl delete deployments,services,pods --all
 
@@ -26,3 +28,5 @@ kubectl describe pod pod_name
 
 az group delete --resource-group <rg-name>
 
+minikube service tukano-app
+docker run --name postgres-container -e POSTGRES_USER=tukano_user -e POSTGRES_PASSWORD=secure_password -e POSTGRES_DB=tukano_db -p 5432:5432 -d postgres:latest
