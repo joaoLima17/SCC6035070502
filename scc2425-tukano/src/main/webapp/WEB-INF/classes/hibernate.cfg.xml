@@ -2,7 +2,7 @@
 <hibernate-configuration>
     <session-factory>
         <property name="connection.driver_class">org.postgresql.Driver</property>
-
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
         <property name="connection.url">jdbc:postgresql://postgres:5432/tukano_db?ssl=false</property>
 
         <property name="connection.username">tukano_user</property>
