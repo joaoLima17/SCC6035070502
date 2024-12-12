@@ -4,7 +4,7 @@ mvn clean compile package tomcat7:redeploy
 
 docker build -t jmll17/scc2425-webapp .
 
-docker push diogodi/scc2425-webapp
+docker push jmll17/scc2425-webapp
 
 docker run -it --rm -p 8080 diogodi/scc2425-webapp
 
@@ -20,7 +20,7 @@ kubectl apply -f persistentvolume.yaml
 kubectl apply -f postgre.yaml
 kubectl apply -f tukano-app.yaml
 
-kubectl delete deployments,services,pods --all
+kubectl delete deployments,services,pods,pv,pvc --all
 
 kubectl delete pv --all
 
@@ -28,5 +28,5 @@ kubectl describe pod pod_name
 
 az group delete --resource-group <rg-name>
 
-minikube service tukano-app
+minikube service tukano-app --url
 docker run --name postgres-container -e POSTGRES_USER=tukano_user -e POSTGRES_PASSWORD=secure_password -e POSTGRES_DB=tukano_db -p 5432:5432 -d postgres:latest

@@ -3,7 +3,7 @@
     <session-factory>
         <property name="connection.driver_class">org.postgresql.Driver</property>
         <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
-        <property name="connection.url">jdbc:postgresql://postgres:5432/tukano_db?ssl=false</property>
+        <property name="connection.url">jdbc:postgresql://postgres/tukano_db?ssl=false</property>
 
         <property name="connection.username">tukano_user</property>
         <property name="connection.password">secure_password</property>
@@ -12,7 +12,7 @@
 
         <property name="show_sql">true</property>
         <property name="current_session_context_class">thread</property>
-        <property name="hbm2ddl.auto">create-delete</property>
+        <property name="hbm2ddl.auto">create-drop</property>
         <property name="hibernate.dbcp.initialSize">5</property>
         <property name="hibernate.dbcp.maxTotal">20</property>
         <property name="hibernate.dbcp.maxIdle">10</property>

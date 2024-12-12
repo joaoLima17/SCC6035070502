@@ -220,7 +220,7 @@ public class JavaUsers implements Users {
 
 	private Result<User> validatedUserOrError(Result<User> res, String pwd) {
 		try {
-			Authentication.validateSession(res.value().userId());
+			//Authentication.validateSession(res.value().userId());
 		} catch (Exception e) {
 			return error(BAD_REQUEST);
 		}
