@@ -1,6 +1,6 @@
 docker run -ti --net=host smduarte/tomcat10
 
-mvn clean compile package tomcat7:redeploy
+mvn clean compile package 
 
 docker build -t jmll17/scc2425-webapp .
 
@@ -19,6 +19,8 @@ az aks create --resource-group scc2425-cluster-rg-diogodi --name my-scc2425-clus
 kubectl apply -f persistentvolume.yaml
 kubectl apply -f postgre.yaml
 kubectl apply -f tukano-app.yaml
+kubectl apply -f blob.yaml
+kubectl apply -f redis.yaml
 
 kubectl delete deployments,services,pods,pv,pvc --all
 

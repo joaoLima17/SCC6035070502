@@ -36,7 +36,7 @@ public class TukanoRestServer extends Application{
 	}
 	
 	public TukanoRestServer() {
-		Token.setSecret( Args.valueOf("-secret", "Secret"));
+		Token.setSecret( Args.valueOf("-secret", "Secret")); //Token.setSecret("string");
 		serverURI = String.format(SERVER_BASE_URI, IP.hostname(), PORT);
 		resources.add(RestBlobsResource.class);
 		resources.add(RestShortsResource.class);

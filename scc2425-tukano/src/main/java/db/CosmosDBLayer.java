@@ -15,9 +15,8 @@ import com.azure.cosmos.models.CosmosQueryRequestOptions;
 import com.azure.cosmos.models.PartitionKey;
 import tukano.api.Result;
 import tukano.api.Result.ErrorCode;
-import tukano.api.Session2;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+
+
 
 public class CosmosDBLayer {
 
@@ -29,7 +28,7 @@ public class CosmosDBLayer {
 	private static final String USERS_CONTAINER = "users";
 	private static final String FOLLOWS_CONTAINER = "follows";
 	private static final String LIKES_CONTAINER = "likes";
-	Map<String, Session2> sessions = new ConcurrentHashMap<>();
+
 	
 	private static CosmosDBLayer instance;
 
@@ -49,13 +48,7 @@ public class CosmosDBLayer {
 		instance = new CosmosDBLayer( client);
 		return instance;
 	}
-	public void putSession(Session2 s) {
-		sessions.put(s.uid(), s);
-	}
 	
-	public Session2 getSession(String uid) {
-		return sessions.get(uid);
-	}
 	private CosmosClient client;
 	private CosmosDatabase db;
 	private CosmosContainer users_container;

@@ -1,7 +1,9 @@
 package tukano.impl.rest;
 
+import jakarta.ws.rs.NotAuthorizedException;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response.Status;
+import jakarta.ws.rs.core.Response;
 import tukano.api.Result;
 
 public class RestResource {
@@ -15,6 +17,13 @@ public class RestResource {
 			return result.value();
 		else
 			throw new WebApplicationException(statusCodeFrom(result));
+	}
+
+	protected Response responseOrThrow(Response response) {
+		if (response.getStatus() == 200)
+			return response;
+		else
+			throw new NotAuthorizedException("Incorrect login");
 	}
 
 	/**

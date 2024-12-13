@@ -5,10 +5,12 @@ import java.util.List;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import tukano.api.Result;
 import tukano.api.User;
 import tukano.api.Users;
 import tukano.api.rest.RestUsers;
+//import jakarta.ws.rs.core.Response;
 
 
 public class RestUsersClient extends RestClient implements Users {
@@ -23,6 +25,15 @@ public class RestUsersClient extends RestClient implements Users {
 			.accept(MediaType.APPLICATION_JSON)
 			.post(Entity.entity(user, MediaType.APPLICATION_JSON)), String.class );
 	}
+
+	private Response _login(String userId, String pwd) {
+		/*return super.toJavaResult(
+				target.path( userId )
+				.queryParam(RestUsers.PWD, pwd).request()
+				.get(), String.class);*/
+				return null;
+	}
+	
 
 	private Result<User> _getUser(String userId, String pwd) {
 		return super.toJavaResult(
@@ -84,5 +95,11 @@ public class RestUsersClient extends RestClient implements Users {
 	@Override
 	public Result<List<User>> searchUsers(String pattern) {
 		return super.reTry( () -> _searchUsers(pattern));
+	}
+
+	@Override
+	public Response login(String userId, String pwd) {
+		/*return super.reTry( () -> _login(userId, pwd));*/
+		return null;
 	}
 }

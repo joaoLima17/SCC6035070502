@@ -1,60 +1,60 @@
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\utils\Hibernate.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\data\FollowingDAO.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\utils\DB.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\test\tukano\clients\rest\RestShortsClient.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\Token.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\Shorts.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\data\Likes.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\auth\RequestCookiesCleanupFilter.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\utils\TLS.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\db\CosmosDBLayer.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\JavaUsers.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\storage\FilesystemStorage.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\rest\RestBlobsResource.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\rest\RestBlobs.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\utils\Hash.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\rest\utils\DownloadFromStorage.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\rest\utils\GenericExceptionMapper.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\test\test\Test.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\utils\IP.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\test\tukano\clients\rest\RestBlobsClient.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\rest\RestUsers.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\utils\Props.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\JavaBlobs.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\rest\TukanoRestServer.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\rest\utils\CustomLoggingFilter.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\Authentication.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\auth\RequestCookies.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\Session.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\utils\JSON.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\JavaShorts.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\Result.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\ShortDAO.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\utils\TryCatch.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\test\tukano\clients\rest\RestUsersClient.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\utils\Hex.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\test\test\TestUsers.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\rest\RestShortsResource.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\utils\CosmosDB.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\auth\RequestCookiesFilter.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\test\tukano\clients\rest\RestClient.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\utils\Random.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\utils\Queues.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\rest\RestResource.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\utils\Sleep.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\storage\BlobStorage.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\UserDAO.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\rest\RestShorts.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\cache\RedisCache.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\utils\IO.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\storage\AzureStorage.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\utils\Args.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\Short.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\rest\utils\UploadToStorage.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\data\LikesDAO.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\User.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\Users.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\test\test\TestCache.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\rest\RestUsersResource.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\data\Following.java
-C:\Users\donun\OneDrive\Ambiente de Trabalho\uni\4 ano\1 sem\SCC\projeto\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\Blobs.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\rest\RestShortsResource.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\Authentication.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\test\tukano\clients\rest\RestUsersClient.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\Users.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\test\test\TestUsers.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\test\tukano\clients\rest\RestShortsClient.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\Shorts.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\storage\FilesystemStorage.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\rest\RestUsers.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\data\LikesDAO.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\utils\Props.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\rest\RestUsersResource.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\storage\AzureStorage.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\utils\JSON.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\JavaUsers.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\test\test\Test.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\data\Likes.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\storage\BlobStorage.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\utils\Args.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\utils\IO.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\Result.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\utils\CosmosDB.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\utils\Sleep.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\utils\TryCatch.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\Short.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\utils\Hash.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\JavaBlobs.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\rest\RestResource.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\rest\RestBlobs.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\utils\Queues.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\cache\RedisCache.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\Blobs.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\rest\RestShorts.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\utils\DB.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\User.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\utils\TLS.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\auth\RequestCookies.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\rest\RestBlobsResource.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\data\Following.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\utils\Hibernate.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\ShortDAO.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\rest\TukanoRestServer.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\rest\utils\DownloadFromStorage.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\JavaShorts.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\auth\RequestCookiesCleanupFilter.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\utils\Random.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\rest\utils\CustomLoggingFilter.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\UserDAO.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\test\test\TestCache.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\rest\utils\GenericExceptionMapper.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\Session.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\api\auth\RequestCookiesFilter.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\rest\utils\UploadToStorage.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\test\tukano\clients\rest\RestBlobsClient.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\utils\Hex.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\test\tukano\clients\rest\RestClient.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\db\CosmosDBLayer.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\data\FollowingDAO.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\tukano\impl\Token.java
+C:\Users\João Lima\Desktop\aulas\4º1ºS\SCC\scc2425\SCC6035070502\scc2425-tukano\src\main\java\utils\IP.java

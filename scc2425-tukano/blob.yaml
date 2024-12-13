@@ -1,0 +1,80 @@
+# Persistent Volume for Blob Storage Simulation
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: blob-storage-pv
+  labels:
+    app: tukano-app
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: "/mnt/data/blobs" # This path will be in Minikube's VM
+
+---
+
+# Persistent Volume Claim for Blob Storage
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: blob-storage-pvc
+  labels:
+    app: tukano-app
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+
+# Blob Storage Simulation Deployment (Optional for serving files)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blob-storage
+  labels:
+    app: blob-storage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: blob-storage
+  template:
+    metadata:
+      labels:
+        app: blob-storage
+    spec:
+      containers:
+      - name: blob-storage
+        image: nginx:alpine # Minimal image for serving static files
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: "/usr/share/nginx/html"
+          name: blob-storage-volume
+      volumes:
+      - name: blob-storage-volume
+        persistentVolumeClaim:
+          claimName: blob-storage-pvc
+
+---
+
+# Blob Storage Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: blob-storage
+  labels:
+    app: blob-storage
+spec:
+  ports:
+    - port: 8080
+      targetPort: 80
+  selector:
+    app: blob-storage
+  type: ClusterIP

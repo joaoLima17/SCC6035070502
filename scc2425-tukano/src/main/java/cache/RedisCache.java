@@ -1,14 +1,17 @@
 package cache;
 
+import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+import tukano.api.Session;
+import utils.JSON;
 
 public class RedisCache {
-	private static final String RedisHostname = "redis-70502.redis.cache.windows.net";
-	private static final String RedisKey = "XWQgqW8bRzG4TVqRDu4We7MvEInlGZWoAAzCaETr3W8="; 
-	private static final int REDIS_PORT = 6380; 
+	private static final String RedisHostname = "redis";
+	
+	private static final int REDIS_PORT = 6379; 
 	private static final int REDIS_TIMEOUT = 1000;
-	private static final boolean Redis_USE_TLS = true;
+
 	
 	private static JedisPool instance;
 	
@@ -25,7 +28,24 @@ public class RedisCache {
 		poolConfig.setTestWhileIdle(true);
 		poolConfig.setNumTestsPerEvictionRun(3);
 		poolConfig.setBlockWhenExhausted(true);
-		instance = new JedisPool(poolConfig, RedisHostname, REDIS_PORT, REDIS_TIMEOUT, RedisKey, Redis_USE_TLS);
+		instance = new JedisPool(poolConfig, RedisHostname, REDIS_PORT, REDIS_TIMEOUT);
 		return instance;
+	}
+
+	public static void putSession(String uid, Session s) {
+		try (Jedis jedis = instance.getResource()) {
+
+			String redisId = "cookie: " + uid;
+			var sessionJSON = JSON.encode(s);
+			jedis.set(redisId, sessionJSON);
+			jedis.expire(redisId, 3600);
+		}
+	}
+	public static Session getSession(String uid) {
+		try (Jedis jedis = instance.getResource()) {
+
+			String redisId = "cookie: " + uid;
+			return JSON.decode(jedis.get(redisId), Session.class);
+		}
 	}
 }

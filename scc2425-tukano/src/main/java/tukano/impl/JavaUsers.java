@@ -15,6 +15,8 @@ import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 import cache.RedisCache;
+import jakarta.ws.rs.core.Response;
+//import jakarta.ws.rs.core.Response;
 import redis.clients.jedis.Jedis;
 import tukano.api.Authentication;
 import tukano.api.Result;
@@ -70,6 +72,11 @@ public class JavaUsers implements Users {
 	}
 
 	@Override
+	public Response login(String userId, String password) {
+		return Authentication.login(userId, password);
+	}
+
+	@Override
 	public Result<User> getUser(String userId, String pwd) {
 		Log.info(() -> format("getUser : userId = %s, pwd = %s\n", userId, pwd));
 
@@ -79,11 +86,14 @@ public class JavaUsers implements Users {
 		try (Jedis jedis = RedisCache.getCachePool().getResource()) {
 
 			String redisId = "users: " + userId;
-			
+			Log.info("CHEGUEI ATE A CACHE");
 			String user = jedis.get(redisId);
+			Log.info("ULTRAPASSEI A CACHE");
 			if (user != null) {
+				Log.info("ESTAVA NA CACHE");
 				return validatedUserOrError(ok(JSON.decode(user, User.class)), pwd);
 			}
+			Log.info("NÃO ESTAVA NA CACHE");
 			Result<User> res;
 			if(POSTGRE)
 				res = DB.getOne(userId, User.class);
@@ -219,11 +229,6 @@ public class JavaUsers implements Users {
 	}
 
 	private Result<User> validatedUserOrError(Result<User> res, String pwd) {
-		try {
-			//Authentication.validateSession(res.value().userId());
-		} catch (Exception e) {
-			return error(BAD_REQUEST);
-		}
 		if (res.isOK())
 			return res.value().getPwd().equals(pwd) ? res : error(FORBIDDEN);
 		else 

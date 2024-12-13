@@ -1,11 +1,9 @@
 package utils;
 
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+
 import java.util.function.Consumer;
 import java.util.function.Function;
-import tukano.api.Session2;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -27,7 +25,6 @@ public class Hibernate {
 	//private static final String HIBERNATE_CFG_FILE = "hibernate.cfg.xml";
 	private SessionFactory sessionFactory;
 	private static Hibernate instance;
-	Map<String, Session2> sessions = new ConcurrentHashMap<>();
 
 	private Hibernate() {
 		try {
@@ -49,12 +46,7 @@ public class Hibernate {
 			instance = new Hibernate();
 		return instance;
 	}
-	public void putSession(Session2 s) {
-		sessions.put(s.uid(), s);
-	}
-	public Session2 getSession(String uid) {
-		return sessions.get(uid);
-	}
+	
 	public Result<Void> persistOne(Object  obj) {
 		return execute( (hibernate) -> {
 			hibernate.persist( obj );

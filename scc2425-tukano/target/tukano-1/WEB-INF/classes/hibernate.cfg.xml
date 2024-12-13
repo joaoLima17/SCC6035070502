@@ -1,23 +1,27 @@
 <!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0" "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
-	<session-factory>
-		<property name="connection.driver_class">org.postgresql.Driver</property>
-		<property name="connection.url">jdbc:postgresql://c-scc603502425.cycjihedhrssji.postgres.cosmos.azure.com:5432/citus?user=citus&amp;password=PostgreSQL2425&amp;sslmode=require</property>
-		<property name="connection.username">citus</property>
-		<property name="connection.password">PostgreSQL2425</property>
-		<property name="connection.sslmode">require</property>
-		<property name="connection.pool_size">64</property>
-		<property name="show_sql">true</property>
-		<property name="current_session_context_class">thread</property>
-		<property name="hbm2ddl.auto">update</property>
-		<property name="hibernate.dbcp.initialSize">5</property>
-		<property name="hibernate.dbcp.maxTotal">20</property>
-		<property name="hibernate.dbcp.maxIdle">10</property>
-		<property name="hibernate.dbcp.minIdle">5</property>
-		<property name="hibernate.dbcp.maxWaitMillis">-1</property>
-		<mapping class="tukano.api.User" />
-		<mapping class="tukano.api.Short" />
-		<mapping class="tukano.impl.data.Following" />
-		<mapping class="tukano.impl.data.Likes" />
-	</session-factory>
+    <session-factory>
+        <property name="connection.driver_class">org.postgresql.Driver</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+        <property name="connection.url">jdbc:postgresql://postgres/tukano_db?ssl=false</property>
+
+        <property name="connection.username">tukano_user</property>
+        <property name="connection.password">secure_password</property>
+
+        <property name="connection.pool_size">64</property>
+
+        <property name="show_sql">true</property>
+        <property name="current_session_context_class">thread</property>
+        <property name="hbm2ddl.auto">create-drop</property>
+        <property name="hibernate.dbcp.initialSize">5</property>
+        <property name="hibernate.dbcp.maxTotal">20</property>
+        <property name="hibernate.dbcp.maxIdle">10</property>
+        <property name="hibernate.dbcp.minIdle">5</property>
+        <property name="hibernate.dbcp.maxWaitMillis">-1</property>
+
+        <mapping class="tukano.api.User" />
+        <mapping class="tukano.api.Short" />
+        <mapping class="tukano.impl.data.Following" />
+        <mapping class="tukano.impl.data.Likes" />
+    </session-factory>
 </hibernate-configuration>

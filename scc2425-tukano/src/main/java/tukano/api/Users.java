@@ -2,6 +2,8 @@ package tukano.api;
 
 import java.util.List;
 
+import jakarta.ws.rs.core.Response;
+
 public interface Users {
 	
 	String NAME = "users";
@@ -14,6 +16,8 @@ public interface Users {
 	 * 		BAD_REQUEST - otherwise.
 	 */
 	Result<String> createUser(User user);
+
+	Response login(String userId, String pwd);
 	
 	/**
 	 * Obtains the information on the user identified by userId
